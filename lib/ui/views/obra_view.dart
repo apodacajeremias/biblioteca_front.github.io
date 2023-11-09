@@ -1,5 +1,5 @@
 import 'package:biblioteca_front/constants.dart';
-import 'package:biblioteca_front/ui/shared/my_list_obra.dart';
+import 'package:biblioteca_front/ui/views/obra_list_view.dart';
 import 'package:flutter/material.dart';
 
 class ObraView extends StatelessWidget {
@@ -35,8 +35,7 @@ class ObraView extends StatelessWidget {
                           Center(child: CircularProgressIndicator.adaptive()));
                 }
                 if (snapshot.hasData) {
-                  return Expanded(
-                      child: MyListObra(obraPaging: snapshot.data!));
+                  return Expanded(child: ObraListView());
                 } else {
                   return Expanded(
                       child: Center(
