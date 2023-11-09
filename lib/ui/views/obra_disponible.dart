@@ -1,5 +1,5 @@
-import 'package:biblioteca_front_02/providers/obra_provider.dart';
-import 'package:biblioteca_front_02/ui/views/obra_view.dart';
+import 'package:biblioteca_front/providers/obra_provider.dart';
+import 'package:biblioteca_front/ui/views/obra_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

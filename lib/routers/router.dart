@@ -1,6 +1,6 @@
 
-import 'package:biblioteca_front_02/routers/handlers/no_page_found_handlers.dart';
-import 'package:biblioteca_front_02/routers/handlers/obra_handler.dart';
+import 'package:biblioteca_front/routers/handlers/no_page_found_handlers.dart';
+import 'package:biblioteca_front/routers/handlers/obra_handler.dart';
 import 'package:fluro/fluro.dart';
 
 class Flurorouter {

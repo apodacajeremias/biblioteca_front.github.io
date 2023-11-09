@@ -1,4 +1,4 @@
-import 'package:biblioteca_front_02/models/obra.dart';
+import 'package:biblioteca_front/models/obra.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 

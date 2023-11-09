@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 
-import 'package:biblioteca_front_02/api/biblioteca_api.dart';
-import 'package:biblioteca_front_02/models/obra.dart';
-import 'package:biblioteca_front_02/models/pages/obra_paging.dart';
-import 'package:biblioteca_front_02/models/pages/paging.dart';
+import 'package:biblioteca_front/api/biblioteca_api.dart';
+import 'package:biblioteca_front/models/obra.dart';
+import 'package:biblioteca_front/models/pages/obra_paging.dart';
+import 'package:biblioteca_front/models/pages/paging.dart';
 import 'package:flutter/material.dart';
 class ObraProvider extends ChangeNotifier {
 

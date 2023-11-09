@@ -1,5 +1,5 @@
 
-import 'package:biblioteca_front_02/models/pages/paging.dart';
+import 'package:biblioteca_front/models/pages/paging.dart';
 
 import '../obra.dart';
 

@@ -1,6 +1,6 @@
-import 'package:biblioteca_front_02/routers/router.dart';
-import 'package:biblioteca_front_02/services/navigation_service.dart';
-import 'package:biblioteca_front_02/ui/shared/my_search_form_field.dart';
+import 'package:biblioteca_front/routers/router.dart';
+import 'package:biblioteca_front/services/navigation_service.dart';
+import 'package:biblioteca_front/ui/shared/my_search_form_field.dart';
 import 'package:flutter/material.dart';
 
 class DashboardLayout extends StatelessWidget {

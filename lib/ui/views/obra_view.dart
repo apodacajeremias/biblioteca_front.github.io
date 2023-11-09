@@ -1,5 +1,5 @@
-import 'package:biblioteca_front_02/constants.dart';
-import 'package:biblioteca_front_02/ui/shared/my_list_obra.dart';
+import 'package:biblioteca_front/constants.dart';
+import 'package:biblioteca_front/ui/shared/my_list_obra.dart';
 import 'package:flutter/material.dart';
 
 class ObraView extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:biblioteca_front_02/models/enums/area.dart';
-import 'package:biblioteca_front_02/models/enums/tipo_obra.dart';
+import 'package:biblioteca_front/models/enums/area.dart';
+import 'package:biblioteca_front/models/enums/tipo_obra.dart';
 List<Obra> obrasFromJson(List str) => str.map((x) => Obra.fromJson(x)).toList();
 Obra obraFromJson(String str) => json.decode(str).map((x) => Obra.fromJson(x));
 class Obra {

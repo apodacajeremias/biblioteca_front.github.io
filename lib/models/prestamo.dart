@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:biblioteca_front_02/models/obra.dart';
-import 'package:biblioteca_front_02/models/persona.dart';
+import 'package:biblioteca_front/models/obra.dart';
+import 'package:biblioteca_front/models/persona.dart';
 
 List<Prestamo> prestamosFromJson(List str) =>
     str.map((x) => Prestamo.fromJson(x)).toList();

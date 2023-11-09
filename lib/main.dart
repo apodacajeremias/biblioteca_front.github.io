@@ -1,10 +1,10 @@
-import 'package:biblioteca_front_02/api/biblioteca_api.dart';
-import 'package:biblioteca_front_02/providers/obra_provider.dart';
-import 'package:biblioteca_front_02/providers/persona_provider.dart';
-import 'package:biblioteca_front_02/routers/router.dart';
-import 'package:biblioteca_front_02/services/navigation_service.dart';
-import 'package:biblioteca_front_02/services/notifications_service.dart';
-import 'package:biblioteca_front_02/ui/layouts/dashboard_layout.dart';
+import 'package:biblioteca_front/api/biblioteca_api.dart';
+import 'package:biblioteca_front/providers/obra_provider.dart';
+import 'package:biblioteca_front/providers/persona_provider.dart';
+import 'package:biblioteca_front/routers/router.dart';
+import 'package:biblioteca_front/services/navigation_service.dart';
+import 'package:biblioteca_front/services/notifications_service.dart';
+import 'package:biblioteca_front/ui/layouts/dashboard_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
