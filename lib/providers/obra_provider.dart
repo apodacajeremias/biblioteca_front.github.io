@@ -1,9 +1,6 @@
-// ignore_for_file: avoid_print
 
 import 'package:biblioteca_front/api/biblioteca_api.dart';
 import 'package:biblioteca_front/models/obra.dart';
-import 'package:biblioteca_front/models/pages/obra_paging.dart';
-import 'package:biblioteca_front/models/pages/paging.dart';
 import 'package:flutter/material.dart';
 class ObraProvider extends ChangeNotifier {
 
@@ -11,13 +8,11 @@ class ObraProvider extends ChangeNotifier {
   // List<Obra> devueltos = [];
   // List<Obra> prestados = [];
 
-  Future buscar({int page = 0, int size = 100, bool activo = true, String query = ''}) async {
-    final pagingResponse = await BibliotecaAPI.httpGet('/obras?page=$page&size=$size&activo=$activo&query=$query');
-    final paging = pagingFromJson(pagingResponse);
-    final content = paging.content.map((e) => Obra.fromJson(e)).toList();
-    final obraPaging = ObraPaging(paging: paging, content: content);
+  Future buscar(String source, {int page = 0, int size = 100, bool activo = true, String query = ''}) async {
+    final response = await BibliotecaAPI.httpGet('$source?page=$page&size=$size&activo=$activo&query=$query');
+    final listResponse = List.from(response).map((e) => Obra.fromJson(e)).toList();
     notifyListeners();
-    return obraPaging;
+    return listResponse;
   }
 
 }

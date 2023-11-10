@@ -10,6 +10,6 @@ class ObraDisponibleView extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<ObraProvider>(context, listen: false);
     // return ObraView(titulo: 'Libros disponibles', onSearch: provider.buscarDisponibles, onFutureLoad: provider.disponibles);
-    return ObraView(titulo: 'Libros disponibles', onSearch: (value){}, onFutureLoad: provider.buscar);
+    return const ObraView(type: ObraViewType.DISPONIBLES);
   }
 }

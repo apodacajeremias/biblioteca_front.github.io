@@ -4,21 +4,31 @@ import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 import 'package:biblioteca_front/ui/shared/my_view_title.dart';
-import 'package:biblioteca_front/ui/views/obra_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
-class ObraView extends StatefulWidget {
-  final String titulo;
-  final Function(String) onSearch;
-  final Future Function() onFutureLoad;
+enum ObraViewType {
+  // ignore: constant_identifier_names
+  DISPONIBLES('/obras/disponibles', 'Libros disponibles'), DEVUELTOS('/obras/devueltos', 'Libros devueltos'), PRESTADOS('/obras/prestados', 'Libros prestados');
 
-  const ObraView(
-      {super.key,
-      required this.titulo,
-      required this.onSearch,
-      required this.onFutureLoad});
+// URL para buscar la lista segun modalidad
+  final String source;
+  final String titulo;
+
+  const ObraViewType(this.source, this.titulo);
+}
+
+class ObraView extends StatefulWidget {
+  final ObraViewType type;
+
+  const ObraView({super.key, required this.type});
+
+  // const ObraView(
+  //     {super.key,
+  //     required this.titulo,
+  //     required this.onSearch,
+  //     required this.onFutureLoad});
 
   @override
   State<ObraView> createState() => _ObraViewState();
@@ -26,6 +36,7 @@ class ObraView extends StatefulWidget {
 
 class _ObraViewState extends State<ObraView> {
   static const _pageSize = 100;
+  String query = '';
 
   final PagingController<int, Obra> _pagingController =
       PagingController(firstPageKey: 0);
@@ -33,15 +44,15 @@ class _ObraViewState extends State<ObraView> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+      _fetchPage(pageKey, query);
     });
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(int pageKey, String query) async {
     int pageNumber = (pageKey / _pageSize) as int;
     try {
-      final newItems = await Provider.of<ObraProvider>(context, listen: false).buscar(page: pageNumber, size: _pageSize);
+      final newItems = await Provider.of<ObraProvider>(context, listen: false).buscar(widget.type.source ,page: pageNumber, size: _pageSize, query: query);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -56,19 +67,21 @@ class _ObraViewState extends State<ObraView> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<SearchProvider>(context);
-    
-    return Container(
-        padding: const EdgeInsets.symmetric(
-            horizontal: defaultPadding, vertical: defaultPadding / 2),
-        child: PagedListView<int, Obra>(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<Obra>(
-            itemBuilder: (context, item, index) => _ObraItem(
-              obra: item,
-            ),
-          ),
-        ));
+    // Cada vez que se escriba algo en la barra de busqueda, la lista cambia
+    final provider = Provider.of<SearchProvider>(context);
+    query = provider.query;
+    return 
+        Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: defaultPadding, vertical: defaultPadding / 2),
+            child: PagedListView<int, Obra>(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<Obra>(
+                itemBuilder: (context, item, index) => _ObraItem(
+                  obra: item,
+                ),
+              ),
+            ));
   }
 
   @override
