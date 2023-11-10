@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +15,21 @@ class MySearchFormField extends StatefulWidget {
 }
 
 class _MySearchFormFieldState extends State<MySearchFormField> {
+  bool blink = false;
   bool inFocus = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      if (inFocus) {
+        setState(() {
+          blink = !blink;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).primaryColor;
@@ -28,30 +44,59 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
         duration: const Duration(milliseconds: 500),
         width: inFocus ? context.width * 0.8 : context.width * 0.2,
         height: inFocus ? context.height * 0.06 : context.height * 0.05,
-        
-          curve: Curves.fastOutSlowIn,
+        curve: Curves.fastOutSlowIn,
         child: TextField(
-          onChanged: (value) {
-            Provider.of<SearchProvider>(context, listen: false).query = value;
-          },
+            onSubmitted: (value) {
+              Provider.of<SearchProvider>(context, listen: false).query =
+                  value.trim();
+            },
+            onChanged: (value) {
+              if (validateSearch(value)) {
+                Provider.of<SearchProvider>(context, listen: false).query =
+                    value.trim();
+              }
+            },
             decoration: InputDecoration(
-          fillColor: primary.withOpacity(0.1),
-          filled: true,
-          contentPadding: EdgeInsets.zero,
-          prefixIcon: const Icon(Icons.search),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: primary),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: primary, width: 2.0),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          hintText: 'Buscar',
-          hintStyle: Theme.of(context).textTheme.bodyMedium,
-          border: const OutlineInputBorder(),
-        )),
+              prefixIcon: _buildPrefixIcon(primary),
+              suffixIcon: inFocus ? _buildSuffixIcon(primary) : null,
+              fillColor: primary.withOpacity(0.1),
+              filled: true,
+              contentPadding: EdgeInsets.zero,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: primary),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: blink ? primary.withOpacity(0.5) : primary,
+                    width: 2.0),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              hintText: 'Buscar',
+              hintStyle: Theme.of(context).textTheme.bodyMedium,
+              border: const OutlineInputBorder(),
+            )),
       ),
     );
+  }
+
+  Widget _buildSuffixIcon(Color primary) {
+    return Icon(Icons.keyboard_return,
+        color: blink ? primary.withOpacity(0.5) : primary);
+  }
+
+  Widget _buildPrefixIcon(Color primary) {
+    return Icon(Icons.search,
+        color: blink ? primary.withOpacity(0.5) : primary);
+  }
+
+  bool validateSearch(String value) {
+    if (value.length % 4 == 0) {
+      return true;
+    }
+    if (value.endsWith(' ')) {
+      return true;
+    }
+    return false;
   }
 }

@@ -2,7 +2,6 @@ import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
-import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 import 'package:biblioteca_front/ui/shared/my_view_title.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -73,7 +72,6 @@ class _ObraViewState extends State<ObraView> {
   Widget build(BuildContext context) {
     // Cada vez que se escriba algo en la barra de busqueda, la lista cambia
     Provider.of<SearchProvider>(context);
-    print('rebuild');
     _pagingController.refresh();
     return Column(
       children: [
@@ -109,9 +107,17 @@ class _ObraItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        title: Text(obra.nombre ?? ''),
-        subtitle: Text(obra.autor ?? ''),
-        trailing: MyElevatedButton.done(onPressed: () {}));
+    return ExpansionTile(
+      title: Text(obra.nombre ?? ''),
+      subtitle: Text(obra.autor ?? ''),
+      // trailing: MyElevatedButton.done(onPressed: () {}),
+      children: [
+        if (obra.sinopsis != null)
+          Text(
+            obra.sinopsis!,
+          ),
+        if (obra.editorial != null) Text(obra.editorial ?? ''),
+      ],
+    );
   }
 }
