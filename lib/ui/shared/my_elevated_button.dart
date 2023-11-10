@@ -7,17 +7,16 @@ class MyElevatedButton extends StatelessWidget {
   const MyElevatedButton(
       {super.key, required this.text, this.icon, this.onPressed});
 
-  factory MyElevatedButton.create({required Function onPressed}) =>
+  factory MyElevatedButton.prestar({required Function onPressed}) =>
       MyElevatedButton(
-          text: 'Crear', icon: Icons.add_outlined, onPressed: onPressed);
+          text: 'Prestar', icon: Icons.upload_file, onPressed: onPressed);
 
   factory MyElevatedButton.edit({required Function onPressed}) =>
-      MyElevatedButton(
-          text: 'Editar', icon: Icons.edit_outlined, onPressed: onPressed);
+      MyElevatedButton(text: 'Editar', icon: Icons.edit, onPressed: onPressed);
 
-  factory MyElevatedButton.done({required Function onPressed}) =>
+  factory MyElevatedButton.devolver({required Function onPressed}) =>
       MyElevatedButton(
-          text: 'Listo', icon: Icons.done_outlined, onPressed: onPressed);
+          text: 'Devolver', icon: Icons.task, onPressed: onPressed);
 
   @override
   Widget build(BuildContext context) {

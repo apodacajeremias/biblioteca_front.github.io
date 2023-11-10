@@ -117,7 +117,7 @@ class _ObraItem extends StatelessWidget {
         obra.autor ?? '',
         style: Theme.of(context).textTheme.displaySmall,
       ),
-      trailing: MyElevatedButton.done(onPressed: () {}),
+      trailing: MyElevatedButton.prestar(onPressed: () {}),
       children: [
         if (obra.editorial != null) ...[
           Padding(
