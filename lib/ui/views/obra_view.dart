@@ -2,6 +2,7 @@ import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
+import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 import 'package:biblioteca_front/ui/shared/my_view_title.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -108,15 +109,41 @@ class _ObraItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      title: Text(obra.nombre ?? ''),
-      subtitle: Text(obra.autor ?? ''),
-      // trailing: MyElevatedButton.done(onPressed: () {}),
+      title: Text(
+        obra.nombre ?? '',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      subtitle: Text(
+        obra.autor ?? '',
+        style: Theme.of(context).textTheme.displaySmall,
+      ),
+      trailing: MyElevatedButton.done(onPressed: () {}),
       children: [
-        if (obra.sinopsis != null)
-          Text(
-            obra.sinopsis!,
+        if (obra.editorial != null) ...[
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding / 2),
+            child: Text(
+              obra.editorial ?? '',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontSize: 12),
+            ),
           ),
-        if (obra.editorial != null) Text(obra.editorial ?? ''),
+        ],
+        if (obra.sinopsis != null) ...[
+          Text(
+            'Sinopsis:',
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding / 2),
+            child: Text(
+              obra.sinopsis!,
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+          ),
+        ]
       ],
     );
   }
