@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 
 enum ObraViewType {
   // ignore: constant_identifier_names
-  DISPONIBLES('/obras/disponibles', 'Libros disponibles'), DEVUELTOS('/obras/devueltos', 'Libros devueltos'), PRESTADOS('/obras/prestados', 'Libros prestados');
+  DISPONIBLES('/obras/disponibles', 'Libros disponibles'),
+  DEVUELTOS('/obras/devueltos', 'Libros devueltos'),
+  PRESTADOS('/obras/prestados', 'Libros prestados');
 
 // URL para buscar la lista segun modalidad
   final String source;
@@ -36,7 +38,6 @@ class ObraView extends StatefulWidget {
 
 class _ObraViewState extends State<ObraView> {
   static const _pageSize = 100;
-  String query = '';
 
   final PagingController<int, Obra> _pagingController =
       PagingController(firstPageKey: 0);
@@ -44,7 +45,8 @@ class _ObraViewState extends State<ObraView> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey, query);
+      _fetchPage(
+          pageKey, Provider.of<SearchProvider>(context, listen: false).query);
     });
     super.initState();
   }
@@ -52,7 +54,9 @@ class _ObraViewState extends State<ObraView> {
   Future<void> _fetchPage(int pageKey, String query) async {
     int pageNumber = (pageKey / _pageSize) as int;
     try {
-      final newItems = await Provider.of<ObraProvider>(context, listen: false).buscar(widget.type.source ,page: pageNumber, size: _pageSize, query: query);
+      final newItems = await Provider.of<ObraProvider>(context, listen: false)
+          .buscar(widget.type.source,
+              page: pageNumber, size: _pageSize, query: query);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -68,20 +72,27 @@ class _ObraViewState extends State<ObraView> {
   @override
   Widget build(BuildContext context) {
     // Cada vez que se escriba algo en la barra de busqueda, la lista cambia
-    final provider = Provider.of<SearchProvider>(context);
-    query = provider.query;
-    return 
-        Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: defaultPadding, vertical: defaultPadding / 2),
-            child: PagedListView<int, Obra>(
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<Obra>(
-                itemBuilder: (context, item, index) => _ObraItem(
-                  obra: item,
+    Provider.of<SearchProvider>(context);
+    print('rebuild');
+    _pagingController.refresh();
+    return Column(
+      children: [
+        MyViewTitle(title: widget.type.titulo),
+        Expanded(
+          child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: defaultPadding, vertical: defaultPadding / 2),
+              child: PagedListView<int, Obra>(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<Obra>(
+                  itemBuilder: (context, item, index) => _ObraItem(
+                    obra: item,
+                  ),
                 ),
-              ),
-            ));
+              )),
+        ),
+      ],
+    );
   }
 
   @override
