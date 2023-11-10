@@ -11,8 +11,8 @@ class ObraProvider extends ChangeNotifier {
   // List<Obra> devueltos = [];
   // List<Obra> prestados = [];
 
-  Future buscar({int page = 0, int size = 100, bool? activo = true}) async {
-    final pagingResponse = await BibliotecaAPI.httpGet('/obras?page=$page&size=$size&activo=$activo');
+  Future buscar({int page = 0, int size = 100, bool activo = true, String query = ''}) async {
+    final pagingResponse = await BibliotecaAPI.httpGet('/obras?page=$page&size=$size&activo=$activo&query=$query');
     final paging = pagingFromJson(pagingResponse);
     final content = paging.content.map((e) => Obra.fromJson(e)).toList();
     final obraPaging = ObraPaging(paging: paging, content: content);

@@ -1,6 +1,7 @@
 import 'package:biblioteca_front/api/biblioteca_api.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/persona_provider.dart';
+import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:biblioteca_front/routers/router.dart';
 import 'package:biblioteca_front/services/navigation_service.dart';
 import 'package:biblioteca_front/services/notifications_service.dart';
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ObraProvider()),
-        ChangeNotifierProvider(create: (context) => PersonaProvider())
+        ChangeNotifierProvider(create: (context) => PersonaProvider()),
+        ChangeNotifierProvider(create: (context) => SearchProvider())
       ],
       child: const MyDashboard(),
     );

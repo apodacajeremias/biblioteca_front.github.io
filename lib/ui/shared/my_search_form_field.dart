@@ -1,4 +1,6 @@
+import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../utils/media_query_values.dart';
 
 class MySearchFormField extends StatefulWidget {
@@ -25,12 +27,15 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
         width: inFocus ? context.width * 0.8 : context.width * 0.2,
-        height: context.height * 0.05,
+        height: inFocus ? context.height * 0.06 : context.height * 0.05,
         
           curve: Curves.fastOutSlowIn,
         child: TextField(
+          onChanged: (value) {
+            Provider.of<SearchProvider>(context, listen: false).query = value;
+          },
             decoration: InputDecoration(
-          fillColor: primary.withOpacity(0.4),
+          fillColor: primary.withOpacity(0.1),
           filled: true,
           contentPadding: EdgeInsets.zero,
           prefixIcon: const Icon(Icons.search),
