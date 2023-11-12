@@ -1,15 +1,19 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
+import 'package:biblioteca_front/ui/shared/my_dropdown_search.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
-import 'package:biblioteca_front/ui/shared/my_view_title.dart';
+
+import 'package:biblioteca_front/ui/shared/my_title.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 enum ObraViewType {
-  // ignore: constant_identifier_names
   DISPONIBLES('/obras/disponibles', 'Libros disponibles'),
   DEVUELTOS('/obras/devueltos', 'Libros devueltos'),
   PRESTADOS('/obras/prestados', 'Libros prestados');
@@ -17,14 +21,13 @@ enum ObraViewType {
 // URL para buscar la lista segun modalidad
   final String source;
   final String titulo;
-
   const ObraViewType(this.source, this.titulo);
 }
 
 class ObraView extends StatefulWidget {
   final ObraViewType type;
 
-  const ObraView({super.key, required this.type});
+  const ObraView(this.type, {super.key});
 
   // const ObraView(
   //     {super.key,
@@ -76,7 +79,7 @@ class _ObraViewState extends State<ObraView> {
     _pagingController.refresh();
     return Column(
       children: [
-        MyViewTitle(title: widget.type.titulo),
+        MyTitle(title: widget.type.titulo),
         Expanded(
           child: Container(
               padding: const EdgeInsets.symmetric(
@@ -86,7 +89,22 @@ class _ObraViewState extends State<ObraView> {
                 builderDelegate: PagedChildBuilderDelegate<Obra>(
                   itemBuilder: (context, item, index) => _ObraItem(
                     obra: item,
+                    button: switch (widget.type) {
+                      ObraViewType.DISPONIBLES => MyElevatedButton.prestar(onPressed:(){
+                        showModalBottomSheet(context: context, builder: (context) {
+                        return const ModalPrestar();
+                      });
+                      }),
+                      ObraViewType.DEVUELTOS => MyElevatedButton.prestar(onPressed: (){}),
+                      ObraViewType.PRESTADOS => MyElevatedButton.devolver(onPressed: (){}),
+                    }
                   ),
+                  noItemsFoundIndicatorBuilder: (context) {
+                    return NoItemsFound(onReload: _pagingController.refresh);
+                  },
+                  firstPageErrorIndicatorBuilder: (context) {
+                    return FirstPageError(onReload: _pagingController.refresh);
+                  },
                 ),
               )),
         ),
@@ -103,8 +121,9 @@ class _ObraViewState extends State<ObraView> {
 
 class _ObraItem extends StatelessWidget {
   final Obra obra;
+  final Widget button;
 
-  const _ObraItem({required this.obra});
+  const _ObraItem({required this.obra, required this.button});
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +136,7 @@ class _ObraItem extends StatelessWidget {
         obra.autor ?? '',
         style: Theme.of(context).textTheme.displaySmall,
       ),
-      trailing: MyElevatedButton.prestar(onPressed: () {}),
+      trailing: button,
       children: [
         if (obra.editorial != null) ...[
           Padding(
@@ -146,5 +165,82 @@ class _ObraItem extends StatelessWidget {
         ]
       ],
     );
+  }
+}
+
+class NoItemsFound extends StatelessWidget {
+  final Function onReload;
+  const NoItemsFound({super.key, required this.onReload});
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<SearchProvider>(context);
+    final theme = Theme.of(context).textTheme;
+    return Column(
+      children: [
+        SvgPicture.asset(
+          'Empty-amico.svg',
+          height: defaultPadding * 15,
+        ),
+        Text('No se encontraron resultados.', style: theme.titleMedium),
+        Text('Revisa tus filtros de búsqueda y vuelve a intentarlo.',
+            style: theme.displaySmall),
+        Text.rich(
+          TextSpan(
+            text: provider.query.isNotEmpty
+                ? 'Sin coincidencias para '
+                : 'Sin coincidencias.',
+            style: theme.displaySmall!,
+            children: [
+              TextSpan(
+                  text: provider.query,
+                  style:
+                      theme.displaySmall!.copyWith(fontStyle: FontStyle.italic))
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(defaultPadding / 2),
+          child: MyElevatedButton.mostrarTodo(onPressed: onReload),
+        ),
+      ],
+    );
+  }
+}
+
+class FirstPageError extends StatelessWidget {
+  final Function onReload;
+  const FirstPageError({super.key, required this.onReload});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
+    return Column(
+      children: [
+        //  Revisa tu red e inténtalo de nuevo.
+        SvgPicture.asset(
+          'Questions-amico.svg',
+          height: defaultPadding * 15,
+        ),
+        Text('Estamos teniendo problemas de conexión.',
+            style: theme.titleMedium),
+        Text('Revisa tu red e inténtalo de nuevo.', style: theme.displaySmall),
+        Padding(
+          padding: const EdgeInsets.all(defaultPadding / 2),
+          child: MyElevatedButton.reintentar(onPressed: onReload),
+        ),
+      ],
+    );
+  }
+}
+
+class ModalPrestar extends StatelessWidget {
+  const ModalPrestar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      MyDropdownSearch()
+    ],);
   }
 }

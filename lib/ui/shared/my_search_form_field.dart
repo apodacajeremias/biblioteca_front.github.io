@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:biblioteca_front/providers/search_provider.dart';
+import 'package:biblioteca_front/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/media_query_values.dart';
@@ -17,7 +18,7 @@ class MySearchFormField extends StatefulWidget {
 class _MySearchFormFieldState extends State<MySearchFormField> {
   bool blink = false;
   bool inFocus = false;
-
+  
   @override
   void initState() {
     super.initState();
@@ -26,6 +27,7 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
         setState(() {
           blink = !blink;
         });
+    
       }
     });
   }
@@ -33,7 +35,6 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).primaryColor;
-
     return Focus(
       onFocusChange: (value) {
         setState(() {
@@ -48,12 +49,12 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
         child: TextField(
             onSubmitted: (value) {
               Provider.of<SearchProvider>(context, listen: false).query =
-                  value.trim();
+                  value.trimAll();
             },
             onChanged: (value) {
               if (validateSearch(value)) {
                 Provider.of<SearchProvider>(context, listen: false).query =
-                    value.trim();
+                    value.trimAll();
               }
             },
             decoration: InputDecoration(

@@ -3,9 +3,9 @@ import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MyViewTitle extends StatelessWidget {
+class MyTitle extends StatelessWidget {
   final String title;
-  const MyViewTitle({super.key, required this.title});
+  const MyTitle({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

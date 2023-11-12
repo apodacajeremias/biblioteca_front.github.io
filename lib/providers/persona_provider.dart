@@ -6,20 +6,17 @@ import 'package:flutter/material.dart';
 
 class PersonaProvider extends ChangeNotifier {
 
-  disponibles({int page = 1}) async {
-    final response = await BibliotecaAPI.httpGet('/persona/soloIDyString');print(response);
-    final ofResponse = response.map((json) => Persona.fromJson(json)).toList();
+    Future buscar(
+      {int page = 0,
+      int size = 100,
+      bool activo = true,
+      String query = ''}) async {
+    var url = '/personas?page=$page&size=$size&activo=$activo&query=$query';
+    print(url);
+    final response = await BibliotecaAPI.httpGet(url);
+    final listResponse =
+        List.from(response).map((e) => Persona.fromJson(e)).toList();
     notifyListeners();
-    
-    return ofResponse;
+    return listResponse;
   }
-
-  Future<List> buscarPorNombre(String query, {int page = 1}) async {
-    print('Buscando por nombre: $query');
-    final response = await BibliotecaAPI.httpGet('/personas/porNombre?query=$query');
-    List ofResponse = response.map((json) => Persona.fromJson(json)).toList();
-    notifyListeners();
-    return ofResponse;
-  }
-
 }
