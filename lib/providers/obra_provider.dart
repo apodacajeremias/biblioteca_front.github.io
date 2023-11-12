@@ -13,7 +13,6 @@ class ObraProvider extends ChangeNotifier {
       bool activo = true,
       String query = ''}) async {
     var url = '$source?page=$page&size=$size&activo=$activo&query=$query';
-    print(url);
     final response = await BibliotecaAPI.httpGet(url);
     final listResponse =
         List.from(response).map((e) => Obra.fromJson(e)).toList();

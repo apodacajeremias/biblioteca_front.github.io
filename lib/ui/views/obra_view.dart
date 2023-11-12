@@ -4,7 +4,7 @@ import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
-import 'package:biblioteca_front/ui/shared/my_dropdown_search.dart';
+import 'package:biblioteca_front/ui/modals/modal_prestar.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 
 import 'package:biblioteca_front/ui/shared/my_title.dart';
@@ -45,21 +45,23 @@ class _ObraViewState extends State<ObraView> {
   final PagingController<int, Obra> _pagingController =
       PagingController(firstPageKey: 0);
 
+      String? _searchTerm;
+
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(
-          pageKey, Provider.of<SearchProvider>(context, listen: false).query);
+          pageKey);
     });
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey, String query) async {
+  Future<void> _fetchPage(int pageKey) async {
     int pageNumber = (pageKey / _pageSize) as int;
     try {
       final newItems = await Provider.of<ObraProvider>(context, listen: false)
           .buscar(widget.type.source,
-              page: pageNumber, size: _pageSize, query: query);
+              page: pageNumber, size: _pageSize, query: _searchTerm ?? '');
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -91,7 +93,8 @@ class _ObraViewState extends State<ObraView> {
                     obra: item,
                     button: switch (widget.type) {
                       ObraViewType.DISPONIBLES => MyElevatedButton.prestar(onPressed:(){
-                        showModalBottomSheet(context: context, builder: (context) {
+                        showModalBottomSheet(isScrollControlled: true,
+                          context: context, builder: (context) {
                         return const ModalPrestar();
                       });
                       }),
@@ -234,13 +237,3 @@ class FirstPageError extends StatelessWidget {
   }
 }
 
-class ModalPrestar extends StatelessWidget {
-  const ModalPrestar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      MyDropdownSearch()
-    ],);
-  }
-}
