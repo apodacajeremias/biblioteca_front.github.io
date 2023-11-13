@@ -6,9 +6,7 @@ import 'package:biblioteca_front/providers/persona_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:biblioteca_front/ui/indicators/firsts_page_error.dart';
 import 'package:biblioteca_front/ui/indicators/no_items_found.dart';
-import 'package:biblioteca_front/ui/modals/modal_prestar.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
-import 'package:biblioteca_front/ui/shared/my_outlined_button.dart';
 
 import 'package:biblioteca_front/ui/shared/my_title.dart';
 import 'package:flutter/material.dart';
