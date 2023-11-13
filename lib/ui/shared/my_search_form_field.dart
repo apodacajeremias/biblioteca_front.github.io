@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 import '../../utils/media_query_values.dart';
 
 class MySearchFormField extends StatefulWidget {
-  const MySearchFormField({
-    super.key
-  });
+  const MySearchFormField({super.key});
 
   @override
   State<MySearchFormField> createState() => _MySearchFormFieldState();
@@ -18,7 +16,7 @@ class MySearchFormField extends StatefulWidget {
 class _MySearchFormFieldState extends State<MySearchFormField> {
   bool blink = false;
   bool inFocus = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +25,6 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
         setState(() {
           blink = !blink;
         });
-    
       }
     });
   }
@@ -35,7 +32,8 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).primaryColor;
-    final Function(String) onChanged = Provider.of<SearchProvider>(context).onChanged;
+    final Function(String) onChanged =
+        Provider.of<SearchProvider>(context).onChanged;
     return Focus(
       onFocusChange: (value) {
         setState(() {

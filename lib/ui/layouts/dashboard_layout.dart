@@ -1,3 +1,4 @@
+import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/routers/router.dart';
 import 'package:biblioteca_front/services/navigation_service.dart';
 import 'package:biblioteca_front/ui/shared/my_search_form_field.dart';
@@ -14,8 +15,15 @@ class DashboardLayout extends StatelessWidget {
       initialEntries: [
         OverlayEntry(
             builder: (context) => Scaffold(
-                  appBar:
-                      AppBar(title: const Row(children: [MySearchFormField()])),
+                  appBar: AppBar(
+                      title: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                        Padding(
+                          padding: EdgeInsets.all(defaultPadding / 2),
+                          child: MySearchFormField(),
+                        ),
+                      ])),
                   drawer: Drawer(
                       child: ListView(
                     children: [

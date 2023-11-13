@@ -1,45 +1,33 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:biblioteca_front/constants.dart';
-import 'package:biblioteca_front/models/obra.dart';
-import 'package:biblioteca_front/providers/obra_provider.dart';
+import 'package:biblioteca_front/models/persona.dart';
+import 'package:biblioteca_front/providers/persona_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
+import 'package:biblioteca_front/ui/indicators/firsts_page_error.dart';
+import 'package:biblioteca_front/ui/indicators/no_items_found.dart';
 import 'package:biblioteca_front/ui/modals/modal_prestar.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
+import 'package:biblioteca_front/ui/shared/my_outlined_button.dart';
 
 import 'package:biblioteca_front/ui/shared/my_title.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
-import '../indicators/firsts_page_error.dart';
-import '../indicators/no_items_found.dart';
-import 'items/obra_item.dart';
+import 'items/persona_item.dart';
 
-enum ObraViewType {
-  DISPONIBLES('/obras/disponibles', 'Libros disponibles'),
-  DEVUELTOS('/obras/devueltos', 'Libros devueltos'),
-  PRESTADOS('/obras/prestados', 'Libros prestados');
-
-// URL para buscar la lista segun modalidad
-  final String source;
-  final String titulo;
-  const ObraViewType(this.source, this.titulo);
-}
-
-class ObraView extends StatefulWidget {
-  final ObraViewType type;
-
-  const ObraView(this.type, {super.key});
+class PersonaView extends StatefulWidget {
+  const PersonaView({super.key});
 
   @override
-  State<ObraView> createState() => _ObraViewState();
+  State<PersonaView> createState() => _PersonaViewState();
 }
 
-class _ObraViewState extends State<ObraView> {
+class _PersonaViewState extends State<PersonaView> {
   static const _pageSize = 100;
 
-  final PagingController<int, Obra> _pagingController =
+  final PagingController<int, Persona> _pagingController =
       PagingController(firstPageKey: 0);
 
   String? _searchTerm;
@@ -55,8 +43,8 @@ class _ObraViewState extends State<ObraView> {
   Future<void> _fetchPage(int pageKey) async {
     int pageNumber = (pageKey / _pageSize) as int;
     try {
-      final newItems = await Provider.of<ObraProvider>(context, listen: false)
-          .buscar(widget.type.source,
+      final newItems =
+          await Provider.of<PersonaProvider>(context, listen: false).buscar(
               page: pageNumber, size: _pageSize, query: _searchTerm ?? '');
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -77,31 +65,16 @@ class _ObraViewState extends State<ObraView> {
     _pagingController.refresh();
     return Column(
       children: [
-        MyTitle(title: widget.type.titulo),
+        const MyTitle(title: 'Personas disponibles'),
         Expanded(
           child: Container(
               padding: const EdgeInsets.symmetric(
                   horizontal: defaultPadding, vertical: defaultPadding / 2),
-              child: PagedListView<int, Obra>(
+              child: PagedListView<int, Persona>(
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<Obra>(
-                  itemBuilder: (context, item, index) => ObraItem(
-                      obra: item,
-                      button: switch (widget.type) {
-                        ObraViewType.DISPONIBLES =>
-                          MyElevatedButton.prestar(onPressed: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                context: context,
-                                builder: (context) {
-                                  return const ModalPrestar();
-                                });
-                          }),
-                        ObraViewType.DEVUELTOS =>
-                          MyElevatedButton.prestar(onPressed: () {}),
-                        ObraViewType.PRESTADOS =>
-                          MyElevatedButton.devolver(onPressed: () {}),
-                      }),
+                builderDelegate: PagedChildBuilderDelegate<Persona>(
+                  itemBuilder: (context, item, index) =>
+                      PersonaItem(persona: item),
                   noItemsFoundIndicatorBuilder: (context) {
                     return NoItemsFound(onReload: _pagingController.refresh);
                   },
@@ -111,6 +84,20 @@ class _ObraViewState extends State<ObraView> {
                 ),
               )),
         ),
+        Row(
+          children: [
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.all(defaultPadding / 2),
+              child: MyElevatedButton.cancelar(onPressed: () {}),
+            )),
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.all(defaultPadding / 2),
+              child: MyElevatedButton.confirmar(onPressed: () {}),
+            ))
+          ],
+        )
       ],
     );
   }
