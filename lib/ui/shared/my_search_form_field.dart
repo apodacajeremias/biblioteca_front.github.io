@@ -91,7 +91,7 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
   }
 
   bool validateSearch(String value) {
-    if (value.length % 4 == 0) {
+    if (value.length % 2 == 0) {
       return true;
     }
     if (value.endsWith(' ')) {

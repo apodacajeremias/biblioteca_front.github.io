@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/prestamo_provider.dart';
+
 void main() {
   BibliotecaAPI.configureDio();
   Flurorouter.configureRoutes();
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ObraProvider()),
         ChangeNotifierProvider(create: (context) => PersonaProvider()),
+        ChangeNotifierProvider(create: (context) => PrestamoProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider())
       ],
       child: const MyDashboard(),

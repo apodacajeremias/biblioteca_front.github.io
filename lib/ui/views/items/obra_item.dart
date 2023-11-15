@@ -5,9 +5,9 @@ import '../../../models/obra.dart';
 
 class ObraItem extends StatelessWidget {
   final Obra obra;
-  final Widget button;
+  final Widget trailing;
 
-  const ObraItem({super.key, required this.obra, required this.button});
+  const ObraItem({super.key, required this.obra, required this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class ObraItem extends StatelessWidget {
         obra.autor ?? '',
         style: Theme.of(context).textTheme.displaySmall,
       ),
-      trailing: button,
+      trailing: trailing,
       children: [
         if (obra.editorial != null) ...[
           Padding(

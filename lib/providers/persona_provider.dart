@@ -2,6 +2,7 @@
 
 import 'package:biblioteca_front/api/biblioteca_api.dart';
 import 'package:biblioteca_front/models/persona.dart';
+import 'package:biblioteca_front/utils/string_util.dart';
 import 'package:flutter/material.dart';
 
 class PersonaProvider extends ChangeNotifier {
@@ -26,8 +27,7 @@ class PersonaProvider extends ChangeNotifier {
       int size = 100,
       bool activo = true,
       String query = ''}) async {
-    var url = '/personas?page=$page&size=$size&activo=$activo&query=$query';
-    debugPrint(url);
+    var url = '/personas?page=$page&size=$size&activo=$activo&query=${query.trimAll()}';
     final response = await BibliotecaAPI.httpGet(url);
     final listResponse =
         List.from(response).map((e) => Persona.fromJson(e)).toList();

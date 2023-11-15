@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:intl/intl.dart';
+
 import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
@@ -12,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/prestamo_provider.dart';
+import '../../services/notifications_service.dart';
 import '../indicators/firsts_page_error.dart';
 import '../indicators/no_items_found.dart';
 import 'items/obra_item.dart';
@@ -87,20 +91,34 @@ class _ObraViewState extends State<ObraView> {
                 builderDelegate: PagedChildBuilderDelegate<Obra>(
                   itemBuilder: (context, item, index) => ObraItem(
                       obra: item,
-                      button: switch (widget.type) {
+                      trailing: switch (widget.type) {
                         ObraViewType.DISPONIBLES =>
-                          MyElevatedButton.prestar(onPressed: () {
-                            showModalBottomSheet(
+                          MyElevatedButton.prestar(onPressed: () async {
+                            await showModalBottomSheet(
+                                elevation: 1,
                                 isScrollControlled: true,
                                 context: context,
                                 builder: (context) {
-                                  return const ModalPrestar();
+                                  return ModalPrestar(idObra: item.id!);
                                 });
+                            
                           }),
-                        ObraViewType.DEVUELTOS =>
-                          MyElevatedButton.prestar(onPressed: () {}),
+                        ObraViewType.DEVUELTOS => Text(DateFormat('dd/MM/yyyy').format(DateTime.now())),
                         ObraViewType.PRESTADOS =>
-                          MyElevatedButton.devolver(onPressed: () {}),
+                          MyElevatedButton.devolver(onPressed: () async {
+                            try {
+                              await Provider.of<PrestamoProvider>(context,
+                                      listen: false)
+                                  .devolver(item.id!);
+                              NotificationsService.showSnackbar(
+                                  'Se ha procesado la devolucion.');
+                              _pagingController.refresh();
+                            } on Exception catch (e) {
+                              NotificationsService.showSnackbarError(
+                                  'No se ha registrado la devolucion.');
+                              rethrow;
+                            }
+                          }),
                       }),
                   noItemsFoundIndicatorBuilder: (context) {
                     return NoItemsFound(onReload: _pagingController.refresh);
