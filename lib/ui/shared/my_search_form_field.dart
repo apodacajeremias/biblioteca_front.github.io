@@ -42,7 +42,7 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
-        width: inFocus ? context.width * 0.8 : context.width * 0.2,
+        width: inFocus ? context.width * 0.6 : context.width * 0.3,
         height: inFocus ? context.height * 0.06 : context.height * 0.05,
         curve: Curves.fastOutSlowIn,
         child: TextField(

@@ -54,6 +54,7 @@ class ModalPrestar extends StatelessWidget {
                       child: Text(e.nombre ?? '')))
                   .toList();
             },
+            requestItemCount: 100,
             onChanged: (String? value) {
               idPersona = value ?? '';
             },
@@ -81,8 +82,7 @@ class ModalPrestar extends StatelessWidget {
               child: MyElevatedButton.confirmar(onPressed: () async {
                 if (idObra.isNotEmpty && idPersona.isNotEmpty) {
                   try {
-                    await Provider.of<PrestamoProvider>(context,
-                            listen: false)
+                    await Provider.of<PrestamoProvider>(context, listen: false)
                         .prestar(idObra, idPersona);
                     NotificationsService.showSnackbar(
                         'El prestamo se ha registrado.');
