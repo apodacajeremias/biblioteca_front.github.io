@@ -1,88 +1,100 @@
-import 'dart:convert';
-import 'package:biblioteca_front/models/enums/area.dart';
-import 'package:biblioteca_front/models/enums/tipo_obra.dart';
-List<Obra> obrasFromJson(List str) => str.map((x) => Obra.fromJson(x)).toList();
-Obra obraFromJson(String str) => json.decode(str).map((x) => Obra.fromJson(x));
 class Obra {
-    String? id;
-    DateTime? fechaCreacion;
-    DateTime? fechaModificacion;
-    String? subtitulo;
-    String? sinopsis;
-    String? autor;
-    String? editorial;
-    String? isbn;
-    String? doi;
-    String? anhoPublicacion;
-    String? idioma;
-    String? pais;
-    String? portada;
-    bool? fisico;
-    TipoObra? tipo;
-    Area? area;
-    bool? activo;
-    String? nombre;
+    final String id;
+    final DateTime fechaCreacion;
+    final String subtitulo;
+    final List<String> autores;
+    final String empresaResponsable;
+    final String sinopsis;
+    final int anho;
+    final String pais;
+    final String idioma;
+    final String portada;
+    final String area;
+    final String tipo;
+    final String subtipo;
+    final String tipoIdentificador;
+    final String identificador;
+    final bool disponible;
+    final int cantidad;
+    final int cantidadDisponible;
+    final bool fisico;
+    final dynamic recurso;
+    final bool activo;
+    final String nombre;
 
     Obra({
-        this.id,
-        this.fechaCreacion,
-        this.fechaModificacion,
-        this.subtitulo,
-        this.sinopsis,
-        this.autor,
-        this.editorial,
-        this.isbn,
-        this.doi,
-        this.anhoPublicacion,
-        this.idioma,
-        this.pais,
-        this.portada,
-        this.fisico,
-        this.tipo,
-        this.area,
-        this.activo,
-        this.nombre,
+        required this.id,
+        required this.fechaCreacion,
+        required this.subtitulo,
+        required this.autores,
+        required this.empresaResponsable,
+        required this.sinopsis,
+        required this.anho,
+        required this.pais,
+        required this.idioma,
+        required this.portada,
+        required this.area,
+        required this.tipo,
+        required this.subtipo,
+        required this.tipoIdentificador,
+        required this.identificador,
+        required this.disponible,
+        required this.cantidad,
+        required this.cantidadDisponible,
+        required this.fisico,
+        required this.recurso,
+        required this.activo,
+        required this.nombre,
     });
 
     factory Obra.fromJson(Map<String, dynamic> json) => Obra(
         id: json["id"],
-        fechaCreacion: json["fechaCreacion"] == null ? null : DateTime.parse(json["fechaCreacion"]!),
-        fechaModificacion: json["fechaModificacion"] == null ? null : DateTime.parse(json["fechaModificacion"]!),
+        fechaCreacion: DateTime.parse(json["fechaCreacion"]),
         subtitulo: json["subtitulo"],
+        autores: List<String>.from(json["autores"].map((x) => x)),
+        empresaResponsable: json["empresaResponsable"],
         sinopsis: json["sinopsis"],
-        autor: json["autor"],
-        editorial: json["editorial"],
-        isbn: json["isbn"],
-        doi: json["doi"],
-        anhoPublicacion: json["anhoPublicacion"],
-        idioma: json["idioma"],
+        anho: json["anho"],
         pais: json["pais"],
+        idioma: json["idioma"],
         portada: json["portada"],
-        fisico: json["fisico"] == null ? null : (json["fisico"]!),
-        tipo: json["tipo"] == null ? null : TipoObra.values.byName(json["tipo"]!),
-        area: json["area"] == null ? null : Area.values.byName(json["area"]!),
-        activo: json["activo"] == null ? null : (json["activo"]!),
+        area: json["area"],
+        tipo: json["tipo"],
+        subtipo: json["subtipo"],
+        tipoIdentificador: json["tipoIdentificador"],
+        identificador: json["identificador"],
+        disponible: json["disponible"],
+        cantidad: json["cantidad"],
+        cantidadDisponible: json["cantidadDisponible"],
+        fisico: json["fisico"],
+        recurso: json["recurso"],
+        activo: json["activo"],
         nombre: json["nombre"],
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "fechaCreacion": fechaCreacion?.toIso8601String(),
-        "fechaModificacion": fechaModificacion?.toIso8601String(),
+        "fechaCreacion": fechaCreacion.toIso8601String(),
         "subtitulo": subtitulo,
+        "autores": List<dynamic>.from(autores.map((x) => x)),
+        "empresaResponsable": empresaResponsable,
         "sinopsis": sinopsis,
-        "autor": autor,
-        "editorial": editorial,
-        "isbn": isbn,
-        "doi": doi,
-        "anhoPublicacion": anhoPublicacion,
-        "idioma": idioma,
+        "anho": anho,
         "pais": pais,
+        "idioma": idioma,
         "portada": portada,
-        "fisico": fisico,
-        "tipo": tipo,
         "area": area,
+        "tipo": tipo,
+        "subtipo": subtipo,
+        "tipoIdentificador": tipoIdentificador,
+        "identificador": identificador,
+        "disponible": disponible,
+        "cantidad": cantidad,
+        "cantidadDisponible": cantidadDisponible,
+        "fisico": fisico,
+        "recurso": recurso,
         "activo": activo,
         "nombre": nombre,
     };
 }
+

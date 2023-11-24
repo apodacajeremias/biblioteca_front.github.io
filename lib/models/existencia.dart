@@ -1,22 +1,27 @@
-class Persona {
+import 'package:biblioteca_front/models/obra.dart';
+
+class Existencia {
     final String id;
     final DateTime fechaCreacion;
-    final String documentoIdentidad;
+    final bool disponible;
+    final Obra obra;
     final bool activo;
     final String nombre;
 
-    Persona({
+    Existencia({
         required this.id,
         required this.fechaCreacion,
-        required this.documentoIdentidad,
+        required this.disponible,
+        required this.obra,
         required this.activo,
         required this.nombre,
     });
 
-    factory Persona.fromJson(Map<String, dynamic> json) => Persona(
+    factory Existencia.fromJson(Map<String, dynamic> json) => Existencia(
         id: json["id"],
         fechaCreacion: DateTime.parse(json["fechaCreacion"]),
-        documentoIdentidad: json["documentoIdentidad"],
+        disponible: json["disponible"],
+        obra: Obra.fromJson(json["obra"]),
         activo: json["activo"],
         nombre: json["nombre"],
     );
@@ -24,7 +29,8 @@ class Persona {
     Map<String, dynamic> toJson() => {
         "id": id,
         "fechaCreacion": fechaCreacion.toIso8601String(),
-        "documentoIdentidad": documentoIdentidad,
+        "disponible": disponible,
+        "obra": obra.toJson(),
         "activo": activo,
         "nombre": nombre,
     };

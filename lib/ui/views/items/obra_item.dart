@@ -17,16 +17,16 @@ class ObraItem extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyMedium,
       ),
       subtitle: Text(
-        obra.autor ?? '',
+        obra.autores.first ?? '',
         style: Theme.of(context).textTheme.displaySmall,
       ),
       trailing: trailing,
       children: [
-        if (obra.editorial != null) ...[
+        if (obra.empresaResponsable != null) ...[
           Padding(
             padding: const EdgeInsets.all(defaultPadding / 2),
             child: Text(
-              obra.editorial ?? '',
+              obra.empresaResponsable ?? '',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium

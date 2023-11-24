@@ -1,30 +1,45 @@
-import 'dart:convert';
-
-import 'package:biblioteca_front/models/obra.dart';
+import 'package:biblioteca_front/models/existencia.dart';
 import 'package:biblioteca_front/models/persona.dart';
 
-List<Prestamo> prestamosFromJson(List str) =>
-    str.map((x) => Prestamo.fromJson(x)).toList();
-Prestamo prestamoFromJson(String str) =>
-    json.decode(str).map((x) => Prestamo.fromJson(x));
-
 class Prestamo {
-  String? id;
-  String? nombre;
-  Obra? obra;
-  Persona? persona;
+    final String id;
+    final DateTime fechaCreacion;
+    final Existencia existencia;
+    final Persona persona;
+    final dynamic fechaHoraDevolucion;
+    final bool activo;
+    final String nombre;
 
-  Prestamo({this.id, this.nombre, this.obra, this.persona});
+    Prestamo({
+        required this.id,
+        required this.fechaCreacion,
+        required this.existencia,
+        required this.persona,
+        required this.fechaHoraDevolucion,
+        required this.activo,
+        required this.nombre,
+    });
 
-  factory Prestamo.fromJson(Map<String, dynamic> json) => Prestamo(
+    factory Prestamo.fromJson(Map<String, dynamic> json) => Prestamo(
         id: json["id"],
+        fechaCreacion: DateTime.parse(json["fechaCreacion"]),
+        existencia: Existencia.fromJson(json["existencia"]),
+        persona: Persona.fromJson(json["persona"]),
+        fechaHoraDevolucion: json["fechaHoraDevolucion"],
+        activo: json["activo"],
         nombre: json["nombre"],
-        obra: Obra.fromJson(json['obra']),
-        persona: Persona.fromJson(json['persona']),
-      );
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "id": id,
+        "fechaCreacion": fechaCreacion.toIso8601String(),
+        "existencia": existencia.toJson(),
+        "persona": persona.toJson(),
+        "fechaHoraDevolucion": fechaHoraDevolucion,
+        "activo": activo,
         "nombre": nombre,
-      };
+    };
 }
+
+
+
