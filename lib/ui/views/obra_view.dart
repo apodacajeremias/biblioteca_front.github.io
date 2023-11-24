@@ -1,29 +1,22 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:intl/intl.dart';
-
 import 'package:biblioteca_front/constants.dart';
-import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/search_provider.dart';
-import 'package:biblioteca_front/ui/modals/modal_prestar.dart';
-import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 
 import 'package:biblioteca_front/ui/shared/my_title.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/prestamo_provider.dart';
-import '../../services/notifications_service.dart';
 import '../indicators/firsts_page_error.dart';
 import '../indicators/no_items_found.dart';
 import 'items/obra_item.dart';
 
 enum ObraViewType {
-  DISPONIBLES('/obras/disponibles', 'Libros disponibles'),
-  DEVUELTOS('/obras/devueltos', 'Libros devueltos'),
-  PRESTADOS('/obras/prestados', 'Libros prestados');
+  DISPONIBLES('/obras?disponible=true', 'Libros disponibles'),
+  DEVUELTOS('/prestamos?activo=false', 'Libros devueltos'),
+  PRESTADOS('/prestamos?activo=true', 'Libros prestados');
 
 // URL para buscar la lista segun modalidad
   final String source;
@@ -43,7 +36,7 @@ class ObraView extends StatefulWidget {
 class _ObraViewState extends State<ObraView> {
   static const _pageSize = 100;
 
-  final PagingController<int, Obra> _pagingController =
+  final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 0);
 
   String? _searchTerm;
@@ -60,8 +53,7 @@ class _ObraViewState extends State<ObraView> {
     int pageNumber = (pageKey / _pageSize) as int;
     try {
       final newItems = await Provider.of<ObraProvider>(context, listen: false)
-          .buscar(widget.type.source,
-              page: pageNumber, size: _pageSize, query: _searchTerm ?? '');
+          .buscar(widget.type, page: pageNumber, query: _searchTerm ?? '');
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -86,40 +78,12 @@ class _ObraViewState extends State<ObraView> {
           child: Container(
               padding: const EdgeInsets.symmetric(
                   horizontal: defaultPadding, vertical: defaultPadding / 2),
-              child: PagedListView<int, Obra>(
+              child: PagedListView<int, dynamic>(
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<Obra>(
+                builderDelegate: PagedChildBuilderDelegate<dynamic>(
                   itemBuilder: (context, item, index) => ObraItem(
-                      obra: item,
-                      trailing: switch (widget.type) {
-                        ObraViewType.DISPONIBLES =>
-                          MyElevatedButton.prestar(onPressed: () async {
-                            await showModalBottomSheet(
-                                elevation: 1,
-                                isScrollControlled: true,
-                                context: context,
-                                builder: (context) {
-                                  return ModalPrestar(idObra: item.id!);
-                                });
-                            
-                          }),
-                        ObraViewType.DEVUELTOS => Text(DateFormat('dd/MM/yyyy').format(DateTime.now())),
-                        ObraViewType.PRESTADOS =>
-                          MyElevatedButton.devolver(onPressed: () async {
-                            try {
-                              await Provider.of<PrestamoProvider>(context,
-                                      listen: false)
-                                  .devolver(item.id!);
-                              NotificationsService.showSnackbar(
-                                  'Se ha procesado la devolucion.');
-                              _pagingController.refresh();
-                            } on Exception catch (e) {
-                              NotificationsService.showSnackbarError(
-                                  'No se ha registrado la devolucion.');
-                              rethrow;
-                            }
-                          }),
-                      }),
+                    item: item,
+                  ),
                   noItemsFoundIndicatorBuilder: (context) {
                     return NoItemsFound(onReload: _pagingController.refresh);
                   },
