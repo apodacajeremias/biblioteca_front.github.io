@@ -5,9 +5,9 @@ class BibliotecaAPI {
 
   static void configureDio() {
     // Base del url
-    //  _dio.options.baseUrl = 'http://localhost:8080/api';
+     _dio.options.baseUrl = 'http://localhost:8080/api';
 // _dio.options.baseUrl = 'http://192.168.100.102:8080/sisac/api';
-    _dio.options.baseUrl = 'http://192.168.100.112:8080/api';
+    // _dio.options.baseUrl = 'http://192.168.100.112:8080/api';
   }
 
   static Future httpGet(String path) async {

@@ -1,7 +1,7 @@
 import 'package:biblioteca_front/api/biblioteca_api.dart';
 import 'package:biblioteca_front/models/obra.dart';
 import 'package:biblioteca_front/models/prestamo.dart';
-import 'package:biblioteca_front/ui/views/obra_view.dart';
+import 'package:biblioteca_front/ui/views/obra/obra_list_view.dart';
 import 'package:flutter/material.dart';
 
 class ObraProvider extends ChangeNotifier {

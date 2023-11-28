@@ -22,7 +22,7 @@ class ModalPrestar extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(defaultPadding),
           child: Text('Indique la persona',
               style: Theme.of(context).textTheme.titleLarge),
         ),

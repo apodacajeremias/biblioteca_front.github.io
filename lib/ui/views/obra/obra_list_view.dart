@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
-import '../indicators/firsts_page_error.dart';
-import '../indicators/no_items_found.dart';
-import 'items/obra_item.dart';
+import '../../indicators/firsts_page_error.dart';
+import '../../indicators/no_items_found.dart';
+import 'obra_list_item.dart';
 
 enum ObraViewType {
   DISPONIBLES('/obras?disponible=true', 'Libros disponibles'),
@@ -20,22 +20,23 @@ enum ObraViewType {
 
 // URL para buscar la lista segun modalidad
   final String source;
-  final String titulo;
-  const ObraViewType(this.source, this.titulo);
+  final String title;
+  const ObraViewType(this.source, this.title);
 }
 
-class ObraView extends StatefulWidget {
+class ObraListView extends StatefulWidget {
   final ObraViewType type;
 
-  const ObraView(this.type, {super.key});
+  const ObraListView(this.type, {super.key});
 
   @override
-  State<ObraView> createState() => _ObraViewState();
+  State<ObraListView> createState() => _ObraListViewState();
 }
 
-class _ObraViewState extends State<ObraView> {
+class _ObraListViewState extends State<ObraListView> {
   static const _pageSize = 100;
 
+// Es dynamic porque puede ser Obra o Prestamo
   final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 0);
 
@@ -73,7 +74,7 @@ class _ObraViewState extends State<ObraView> {
     _pagingController.refresh();
     return Column(
       children: [
-        MyTitle(title: widget.type.titulo),
+        MyTitle(title: widget.type.title),
         Expanded(
           child: Container(
               padding: const EdgeInsets.symmetric(
@@ -81,7 +82,7 @@ class _ObraViewState extends State<ObraView> {
               child: PagedListView<int, dynamic>(
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<dynamic>(
-                  itemBuilder: (context, item, index) => ObraItem(
+                  itemBuilder: (context, item, index) => ObraListItem(
                     item: item,
                   ),
                   noItemsFoundIndicatorBuilder: (context) {

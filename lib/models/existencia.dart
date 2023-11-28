@@ -2,11 +2,11 @@ import 'package:biblioteca_front/models/obra.dart';
 
 class Existencia {
     final String id;
+    final bool activo;
+    final String nombre;
     final DateTime fechaCreacion;
     final bool disponible;
     final Obra obra;
-    final bool activo;
-    final String nombre;
 
     Existencia({
         required this.id,
