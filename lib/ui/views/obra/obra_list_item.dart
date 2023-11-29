@@ -29,6 +29,7 @@ class _ListItem extends StatelessWidget {
       title: _buildTitle(item, context),
       subtitle: _buildSubtitle(item, context),
       trailing: _buildTrailing(item, context),
+      children: _buildTileContent(item, context),
     );
   }
 }
@@ -189,4 +190,57 @@ Widget? _buildTrailing(final dynamic item, final BuildContext context) {
     }
   }
   return null;
+}
+
+List<Widget> _buildTileContent(final dynamic item, final BuildContext context) {
+  if (item is Obra) {
+    return [
+      if (item.sinopsis != null) ...{
+        _subtitleText('Sinopsis', context),
+        _contentText(item.sinopsis!, context),
+      },
+      if (item.autores != null)
+        _subtitleText(item.autores!, context, icon: Icons.group),
+      if (item.empresaResponsable != null)
+        _subtitleText(item.empresaResponsable!, context, icon: Icons.home_work),
+    ];
+  } else if (item is Prestamo) {
+    return [];
+  } else {
+    return [];
+  }
+}
+
+Widget _subtitleText(final String text, final BuildContext context,
+    {final IconData? icon}) {
+  return Padding(
+    padding: const EdgeInsets.all(defaultPadding / 4),
+    child: (icon != null)
+        ? Row(
+            children: [
+              Icon(icon),
+              const SizedBox(width: defaultPadding / 4),
+              Text(text,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontSize: 12))
+            ],
+          )
+        : Text(
+            text,
+            style:
+                Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+          ),
+  );
+}
+
+Widget _contentText(final String text, final BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.all(defaultPadding / 2),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.displaySmall,
+    ),
+  );
 }
