@@ -1,8 +1,5 @@
-import 'package:biblioteca_front/models/existencia.dart';
 import 'package:biblioteca_front/models/persona.dart';
-import 'package:biblioteca_front/providers/obra_provider.dart';
 import 'package:biblioteca_front/providers/persona_provider.dart';
-import 'package:biblioteca_front/providers/prestamo_provider.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,24 +8,24 @@ import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart
 
 import '../../constants.dart';
 import '../../models/obra.dart';
+import '../../providers/obra_provider.dart';
 import '../../providers/search_provider.dart';
 import '../../services/notifications_service.dart';
 import '../shared/my_outlined_button.dart';
 
-class ModalPrestar extends StatelessWidget {
+class ModalEnviar extends StatelessWidget {
   final Obra obra;
 
-  const ModalPrestar({super.key, required this.obra});
+  const ModalEnviar({super.key, required this.obra});
 
   @override
   Widget build(BuildContext context) {
     String idPersona = '';
-    String idExistencia = '';
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(defaultPadding),
-          child: Text('Prestar', style: Theme.of(context).textTheme.titleLarge),
+          child: Text('Enviar', style: Theme.of(context).textTheme.titleLarge),
         ),
         Container(
           padding: const EdgeInsets.symmetric(
@@ -66,50 +63,10 @@ class ModalPrestar extends StatelessWidget {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Text('Seleccione la unidad',
-              style: Theme.of(context).textTheme.bodyMedium),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: defaultPadding, vertical: defaultPadding / 2),
-          child: SearchableDropdown<String>.future(
-            backgroundDecoration: (child) => Card(
-              margin: EdgeInsets.zero,
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: child,
-              ),
-            ),
-            changeCompletionDelay: const Duration(seconds: 1),
-            hintText: const Text('Unidades disponibles'),
-            searchHintText: 'Busque por codigo',
-            margin: const EdgeInsets.all(15),
-            futureRequest: () async {
-              final List<Existencia> paginatedList =
-                  await Provider.of<ObraProvider>(context, listen: false)
-                      .buscarExistencias(obra.id);
-              return paginatedList
-                  .map((p) => SearchableDropdownMenuItem(
-                      value: p.id,
-                      label: p.id,
-                      child: ListTile(
-                        title: Text(p.id),
-                        subtitle: Text(p.nombre),
-                      )))
-                  .toList();
-            },
-            onChanged: (String? value) {
-              idExistencia = value ?? '';
-            },
-          ),
-        ),
         Expanded(
             child: Center(
           child: SvgPicture.asset(
-            'Research-amico.svg',
+            'Email-amico.svg',
             height: defaultPadding * 15,
           ),
         )),
@@ -126,25 +83,25 @@ class ModalPrestar extends StatelessWidget {
                 child: Padding(
               padding: const EdgeInsets.all(defaultPadding / 4),
               child: MyElevatedButton.confirmar(onPressed: () async {
-                if (idExistencia.isNotEmpty && idPersona.isNotEmpty) {
+                if (idPersona.isNotEmpty) {
                   try {
-                    await Provider.of<PrestamoProvider>(context, listen: false)
-                        .prestar(idExistencia, idPersona);
+                    await Provider.of<ObraProvider>(context, listen: false)
+                        .enviar(obra.id, idPersona);
                     if (context.mounted) {
                       Provider.of<SearchProvider>(context, listen: false)
                           .refresh();
                       Navigator.of(context).pop();
                     }
                     NotificationsService.showSnackbar(
-                        'El prestamo se ha registrado.');
+                        'La obra se ha enviado por correo.');
                   } on Exception {
                     NotificationsService.showSnackbarError(
-                        'No se ha registrado el prestamo.');
+                        'No se ha enviado la obra por correo.');
                     rethrow;
                   }
-                } else if (idExistencia.isEmpty) {
+                } else if (obra.id.isEmpty) {
                   NotificationsService.showSnackbarError(
-                      'Debe seleccionar la unidad que va a prestar.');
+                      'Debe seleccionar la obra que va a enviar.');
                 } else if (idPersona.isEmpty) {
                   NotificationsService.showSnackbarError(
                       'Debe indicar a la persona.');
@@ -152,8 +109,8 @@ class ModalPrestar extends StatelessWidget {
                   NotificationsService.showSnackbarError(
                       'Debe intentar nuevamente.');
                   if (context.mounted) {
-                    Provider.of<SearchProvider>(context, listen: false).query ==
-                        '';
+                    Provider.of<SearchProvider>(context, listen: false)
+                        .refresh();
                     Navigator.of(context).pop();
                   }
                 }

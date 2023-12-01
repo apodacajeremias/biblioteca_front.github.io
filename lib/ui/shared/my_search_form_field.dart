@@ -32,8 +32,6 @@ class _MySearchFormFieldState extends State<MySearchFormField> {
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).primaryColor;
-    final Function(String) onChanged =
-        Provider.of<SearchProvider>(context).onChanged;
     return Focus(
       onFocusChange: (value) {
         setState(() {

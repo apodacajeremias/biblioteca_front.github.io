@@ -1,11 +1,13 @@
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 import 'package:biblioteca_front/ui/shared/my_outlined_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 import '../../../models/entrada.dart';
 import '../../../providers/entrada_provider.dart';
+import '../../../providers/search_provider.dart';
 import '../../../services/notifications_service.dart';
 
 class EntradaListItem extends StatelessWidget {
@@ -22,8 +24,8 @@ class EntradaListItem extends StatelessWidget {
   }
 }
 
-Widget _buildTrailing(Entrada entrada, BuildContext context) {
-  if (entrada.activo) {
+Widget _buildTrailing(Entrada item, BuildContext context) {
+  if (item.activo) {
     return MyElevatedButton.salir(onPressed: () async {
       await showDialog(
           context: context,
@@ -31,7 +33,7 @@ Widget _buildTrailing(Entrada entrada, BuildContext context) {
             return AlertDialog.adaptive(
               title: _subtitleText('Por favor, confirme', context),
               content: _contentText(
-                  'Marcar salida de ${entrada.persona.nombre}', context),
+                  'Marcar salida de ${item.persona.nombre}', context),
               actions: [
                 MyOutlinedButton.cancelar(onPressed: () {
                   if (context.mounted) {
@@ -41,9 +43,14 @@ Widget _buildTrailing(Entrada entrada, BuildContext context) {
                 MyElevatedButton.confirmar(onPressed: () async {
                   try {
                     await Provider.of<EntradaProvider>(context, listen: false)
-                        .salir(entrada.id);
+                        .salir(item.id);
                     NotificationsService.showSnackbar(
                         'La salida se ha registrado.');
+                    if (context.mounted) {
+                      Provider.of<SearchProvider>(context, listen: false)
+                          .refresh();
+                      Navigator.of(context).pop();
+                    }
                   } on Exception {
                     NotificationsService.showSnackbarError(
                         'La salida no se ha registrado.');
@@ -54,12 +61,14 @@ Widget _buildTrailing(Entrada entrada, BuildContext context) {
           });
     });
   } else {
-    if(entrada.fechaHoraSalida != null){
-    return _subtitleText(entrada.fechaHoraSalida!.toIso8601String(), context);
+    if (item.fechaHoraSalida != null) {
+      return _subtitleText(
+          '${DateFormat.yMMMMd('es').format(item.fechaHoraSalida!)} ${DateFormat.jms('es').format(item.fechaHoraSalida!)}',
+          context);
     } else {
-      return _subtitleText('Sin registro devolucion.', context, icon: Icons.warning);
+      return _subtitleText('Sin registro de salida.', context,
+          icon: Icons.warning);
     }
-
   }
 }
 

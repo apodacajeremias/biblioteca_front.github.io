@@ -14,9 +14,9 @@ import '../../indicators/no_items_found.dart';
 import 'obra_list_item.dart';
 
 enum ObraViewType {
-  DISPONIBLES('/obras?disponible=true', 'Libros disponibles'),
-  DEVUELTOS('/prestamos?activo=false', 'Libros devueltos'),
-  PRESTADOS('/prestamos?activo=true', 'Libros prestados');
+  DISPONIBLES('/obras?activo=true', 'Obras disponibles'),
+  DEVUELTOS('/prestamos?activo=false', 'Obras devueltos'),
+  PRESTADOS('/prestamos?activo=true', 'Obras prestados');
 
   final String source;
   final String title;

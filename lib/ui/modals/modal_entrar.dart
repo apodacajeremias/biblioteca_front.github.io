@@ -63,11 +63,16 @@ class ModalEntrar extends StatelessWidget {
             },
           ),
         ),
-        TextFormField(
-          minLines: 5,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          onChanged: (value) => motivo = value,
+        Expanded(
+          child: TextFormField(
+            minLines: 5,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            onChanged: (value) => motivo = value,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -88,15 +93,15 @@ class ModalEntrar extends StatelessWidget {
                           .entrar(idPersona, motivo);
                   NotificationsService.showSnackbar(
                       'La entrada de ${response.persona.nombre} se ha registrado.');
+                  if (context.mounted) {
+                    Provider.of<SearchProvider>(context, listen: false)
+                        .refresh();
+                    Navigator.of(context).pop();
+                  }
                 } on Exception {
                   NotificationsService.showSnackbarError(
                       'No se ha registrado la entrada.');
                   rethrow;
-                }
-                if (context.mounted) {
-                  Provider.of<SearchProvider>(context, listen: false).query ==
-                      '';
-                  Navigator.of(context).pop();
                 }
               }),
             ))

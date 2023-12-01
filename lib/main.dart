@@ -1,20 +1,23 @@
 import 'package:biblioteca_front/api/biblioteca_api.dart';
-import 'package:biblioteca_front/providers/obra_provider.dart';
-import 'package:biblioteca_front/providers/persona_provider.dart';
-import 'package:biblioteca_front/providers/search_provider.dart';
 import 'package:biblioteca_front/routers/router.dart';
 import 'package:biblioteca_front/services/navigation_service.dart';
 import 'package:biblioteca_front/services/notifications_service.dart';
 import 'package:biblioteca_front/ui/layouts/dashboard_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/entrada_provider.dart';
+import 'providers/obra_provider.dart';
+import 'providers/persona_provider.dart';
+import 'providers/search_provider.dart';
 import 'providers/prestamo_provider.dart';
 
-void main() {
+void main() async {
   BibliotecaAPI.configureDio();
   Flurorouter.configureRoutes();
+  await initializeDateFormatting('es');
   runApp(const MyApp());
 }
 
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => EntradaProvider()),
         ChangeNotifierProvider(create: (context) => ObraProvider()),
         ChangeNotifierProvider(create: (context) => PersonaProvider()),
         ChangeNotifierProvider(create: (context) => PrestamoProvider()),

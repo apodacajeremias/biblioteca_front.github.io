@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
@@ -9,8 +10,8 @@ import '../../services/notifications_service.dart';
 import '../shared/my_elevated_button.dart';
 
 class ModalDevolver extends StatelessWidget {
-  final Prestamo prestamo;
-  const ModalDevolver({super.key, required this.prestamo});
+  final Prestamo item;
+  const ModalDevolver({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class ModalDevolver extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(defaultPadding / 2),
-          child: Text('Devolucion', style: large),
+          child: Text('Devolver', style: large),
         ),
 
         ///
@@ -31,7 +32,7 @@ class ModalDevolver extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(defaultPadding / 4),
-          child: Text(prestamo.persona.nombre, style: medium),
+          child: Text(item.persona.nombre, style: medium),
         ),
 
         ///
@@ -41,7 +42,7 @@ class ModalDevolver extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(defaultPadding / 4),
-          child: Text(prestamo.existencia.obra.nombre, style: medium),
+          child: Text(item.existencia.obra.nombre, style: medium),
         ),
 
         ///
@@ -51,7 +52,7 @@ class ModalDevolver extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(defaultPadding / 4),
-          child: Text(prestamo.existencia.id, style: medium),
+          child: Text(item.existencia.id, style: medium),
         ),
 
         ///
@@ -61,7 +62,9 @@ class ModalDevolver extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(defaultPadding / 4),
-          child: Text(prestamo.fechaCreacion.toIso8601String(), style: medium),
+          child: Text(
+              '${DateFormat.yMMMMd('es').format(item.fechaCreacion)} ${DateFormat.jms('es').format(item.fechaCreacion)}',
+              style: medium),
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -78,18 +81,18 @@ class ModalDevolver extends StatelessWidget {
               child: MyElevatedButton.confirmar(onPressed: () async {
                 try {
                   await Provider.of<PrestamoProvider>(context, listen: false)
-                      .devolver(prestamo.id);
+                      .devolver(item.id);
+                  if (context.mounted) {
+                    Provider.of<SearchProvider>(context, listen: false)
+                        .refresh();
+                    Navigator.of(context).pop();
+                  }
                   NotificationsService.showSnackbar(
                       'La obra ha sido devuelta con exito.');
                 } on Exception {
                   NotificationsService.showSnackbarError(
                       'No se ha procesado la devolucion.');
                   rethrow;
-                }
-                if (context.mounted) {
-                  Provider.of<SearchProvider>(context, listen: false).query ==
-                      '';
-                  Navigator.of(context).pop();
                 }
               }),
             ))

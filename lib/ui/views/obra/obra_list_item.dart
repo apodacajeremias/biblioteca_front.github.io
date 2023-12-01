@@ -1,6 +1,8 @@
 import 'package:biblioteca_front/models/prestamo.dart';
+import 'package:biblioteca_front/ui/modals/modal_enviar.dart';
 import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants.dart';
 import '../../../models/obra.dart';
@@ -9,7 +11,6 @@ import '../../modals/modal_prestar.dart';
 
 class ObraListItem extends StatelessWidget {
   final dynamic item;
-
   const ObraListItem({super.key, required this.item});
 
   @override
@@ -51,10 +52,30 @@ Widget? _buildSubtitle(final dynamic item, final BuildContext context) {
   final style = Theme.of(context).textTheme.displaySmall;
   if (item is Obra) {
     final String? subtitle = item.subtitulo ?? item.autores;
-    return subtitle != null ? Text(subtitle, style: style) : null;
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      children: [
+        const SizedBox(width: double.infinity),
+        if (subtitle != null) Text(subtitle, style: style),
+        if (item.fisico) ...{
+          Text('Disponible: ${item.cantidadDisponible}', style: style),
+        } else ...{
+          Text('Digital', style: style),
+        }
+      ],
+    );
   } else if (item is Prestamo) {
     final String subtitle = item.persona.nombre;
-    return Text(subtitle, style: style);
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      children: [
+        const SizedBox(width: double.infinity),
+        Text(subtitle, style: style),
+        Text(
+            '${DateFormat.yMMMMd('es').format(item.fechaCreacion)} ${DateFormat.jms('es').format(item.fechaCreacion)}',
+            style: style),
+      ],
+    );
   }
   return null;
 }
@@ -62,7 +83,7 @@ Widget? _buildSubtitle(final dynamic item, final BuildContext context) {
 Widget? _buildTrailing(final dynamic item, final BuildContext context) {
   final style = Theme.of(context).textTheme.displaySmall;
   if (item is Obra) {
-    if (item.activo && item.disponible) {
+    if (item.activo && item.disponible && item.fisico) {
       return MyElevatedButton.prestar(onPressed: () async {
         await showModalBottomSheet(
             elevation: 1,
@@ -74,8 +95,18 @@ Widget? _buildTrailing(final dynamic item, final BuildContext context) {
       });
     } else if (!item.activo) {
       return Text('Obra bloqueada.', style: style);
+    } else if (!item.fisico) {
+      return MyElevatedButton.enviar(onPressed: () async {
+        await showModalBottomSheet(
+            elevation: 1,
+            isScrollControlled: true,
+            context: context,
+            builder: (context) {
+              return ModalEnviar(obra: item);
+            });
+      });
     } else if (!item.disponible) {
-      return Text('Unidades no disponibles.', style: style);
+      return Text('No disponible.', style: style);
     }
     return null;
   } else if (item is Prestamo) {
@@ -86,7 +117,7 @@ Widget? _buildTrailing(final dynamic item, final BuildContext context) {
             isScrollControlled: true,
             context: context,
             builder: (context) {
-              return ModalDevolver(prestamo: item);
+              return ModalDevolver(item: item);
             });
       });
     }
@@ -120,7 +151,9 @@ List<Widget> _buildTileContent(final dynamic item, final BuildContext context) {
             icon: Icons.home_work),
       if (item.fechaHoraDevolucion != null) ...{
         _subtitleText('Fecha de devolucion', context, icon: Icons.schedule),
-        _contentText(item.fechaHoraDevolucion!.toIso8601String(), context),
+        _contentText(
+            '${DateFormat.yMMMMd('es').format(item.fechaHoraDevolucion!)} ${DateFormat.jms('es').format(item.fechaHoraDevolucion!)}',
+            context),
       } else ...{
         _subtitleText('Devolucion no efectuada.', context, icon: Icons.warning),
         _contentText('Presione el boton Devolver para efectuar.', context),

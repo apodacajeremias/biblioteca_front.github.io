@@ -14,6 +14,11 @@ class MyElevatedButton extends StatelessWidget {
       MyElevatedButton(
           text: 'Devolver', icon: Icons.task, onPressed: onPressed);
 
+  factory MyElevatedButton.enviar({required Function onPressed}) =>
+      MyElevatedButton(text: 'Enviar', icon: Icons.send, onPressed: onPressed);
+
+  ///
+
   factory MyElevatedButton.mostrarTodo({required Function onPressed}) =>
       MyElevatedButton(
           text: 'Mostrar todo', onPressed: onPressed, color: Colors.yellow);
@@ -25,6 +30,8 @@ class MyElevatedButton extends StatelessWidget {
           onPressed: onPressed,
           color: Colors.yellow);
 
+  ///
+
   factory MyElevatedButton.confirmar({required Function onPressed}) =>
       MyElevatedButton(
           text: 'Si, confirmar', onPressed: onPressed, color: Colors.green);
@@ -33,11 +40,12 @@ class MyElevatedButton extends StatelessWidget {
       MyElevatedButton(
           text: 'No, cancelar', onPressed: onPressed, color: Colors.red);
 
-          factory MyElevatedButton.entrar({required Function onPressed})=>
-      MyElevatedButton(
-          text: 'Marcar entrada', onPressed: onPressed, color: Colors.yellow);
+  ///
 
-  factory MyElevatedButton.salir({required Function onPressed})=>
+  factory MyElevatedButton.entrar({required Function onPressed}) =>
+      MyElevatedButton(text: 'Marcar entrada', onPressed: onPressed);
+
+  factory MyElevatedButton.salir({required Function onPressed}) =>
       MyElevatedButton(
           text: 'Marcar salida', onPressed: onPressed, color: Colors.red);
 
