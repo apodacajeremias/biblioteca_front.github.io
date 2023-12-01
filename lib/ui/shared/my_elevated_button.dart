@@ -33,6 +33,14 @@ class MyElevatedButton extends StatelessWidget {
       MyElevatedButton(
           text: 'No, cancelar', onPressed: onPressed, color: Colors.red);
 
+          factory MyElevatedButton.entrar({required Function onPressed})=>
+      MyElevatedButton(
+          text: 'Marcar entrada', onPressed: onPressed, color: Colors.yellow);
+
+  factory MyElevatedButton.salir({required Function onPressed})=>
+      MyElevatedButton(
+          text: 'Marcar salida', onPressed: onPressed, color: Colors.red);
+
   const MyElevatedButton(
       {super.key, this.text, this.icon, this.color, required this.onPressed});
 

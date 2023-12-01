@@ -18,7 +18,6 @@ enum ObraViewType {
   DEVUELTOS('/prestamos?activo=false', 'Libros devueltos'),
   PRESTADOS('/prestamos?activo=true', 'Libros prestados');
 
-// URL para buscar la lista segun modalidad
   final String source;
   final String title;
   const ObraViewType(this.source, this.title);

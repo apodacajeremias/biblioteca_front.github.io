@@ -11,19 +11,19 @@ class ObraProvider extends ChangeNotifier {
       case ObraViewType.DISPONIBLES:
         final response = await BibliotecaAPI.httpGet(url);
         final listResponse =
-            List.from(response).map((e) => Obra.fromJson(e)).toList();
+            List.from(response).map((o) => Obra.fromJson(o)).toList();
         notifyListeners();
         return listResponse;
       case ObraViewType.DEVUELTOS:
         final response = await BibliotecaAPI.httpGet(url);
         final listResponse =
-            List.from(response).map((e) => Prestamo.fromJson(e)).toList();
+            List.from(response).map((o) => Prestamo.fromJson(o)).toList();
         notifyListeners();
         return listResponse;
       case ObraViewType.PRESTADOS:
         final response = await BibliotecaAPI.httpGet(url);
         final listResponse =
-            List.from(response).map((e) => Prestamo.fromJson(e)).toList();
+            List.from(response).map((o) => Prestamo.fromJson(o)).toList();
         notifyListeners();
         return listResponse;
     }

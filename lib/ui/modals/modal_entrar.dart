@@ -1,26 +1,24 @@
-import 'package:biblioteca_front/models/persona.dart';
-import 'package:biblioteca_front/providers/persona_provider.dart';
-import 'package:biblioteca_front/providers/prestamo_provider.dart';
-import 'package:biblioteca_front/ui/shared/my_elevated_button.dart';
+import 'package:biblioteca_front/models/entrada.dart';
+import 'package:biblioteca_front/providers/entrada_provider.dart';
+import 'package:biblioteca_front/ui/shared/my_outlined_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 import '../../constants.dart';
-import '../../models/obra.dart';
+import '../../models/persona.dart';
+import '../../providers/persona_provider.dart';
 import '../../providers/search_provider.dart';
 import '../../services/notifications_service.dart';
-import '../shared/my_outlined_button.dart';
+import '../shared/my_elevated_button.dart';
 
-class ModalPrestar extends StatelessWidget {
-  final Obra obra;
-
-  const ModalPrestar({super.key, required this.obra});
+class ModalEntrar extends StatelessWidget {
+  const ModalEntrar({super.key});
 
   @override
   Widget build(BuildContext context) {
     String idPersona = '';
+    String motivo = '';
     return Column(
       children: [
         Padding(
@@ -65,13 +63,12 @@ class ModalPrestar extends StatelessWidget {
             },
           ),
         ),
-        Expanded(
-            child: Center(
-          child: SvgPicture.asset(
-            'Research-amico.svg',
-            height: defaultPadding * 15,
-          ),
-        )),
+        TextFormField(
+          minLines: 5,
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          onChanged: (value) => motivo = value,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -85,26 +82,16 @@ class ModalPrestar extends StatelessWidget {
                 child: Padding(
               padding: const EdgeInsets.all(defaultPadding / 2),
               child: MyElevatedButton.confirmar(onPressed: () async {
-                if (obra.id.isNotEmpty && idPersona.isNotEmpty) {
-                  try {
-                    await Provider.of<PrestamoProvider>(context, listen: false)
-                        .prestar(obra.id, idPersona);
-                    NotificationsService.showSnackbar(
-                        'El prestamo se ha registrado.');
-                  } on Exception {
-                    NotificationsService.showSnackbarError(
-                        'No se ha registrado el prestamo.');
-                    rethrow;
-                  }
-                } else if (obra.id.isEmpty) {
+                try {
+                  final Entrada response =
+                      await Provider.of<EntradaProvider>(context, listen: false)
+                          .entrar(idPersona, motivo);
+                  NotificationsService.showSnackbar(
+                      'La entrada de ${response.persona.nombre} se ha registrado.');
+                } on Exception {
                   NotificationsService.showSnackbarError(
-                      'Debe seleccionar nuevamente la obra.');
-                } else if (idPersona.isEmpty) {
-                  NotificationsService.showSnackbarError(
-                      'Debe indicar a la persona.');
-                } else {
-                  NotificationsService.showSnackbarError(
-                      'Debe intentar nuevamente.');
+                      'No se ha registrado la entrada.');
+                  rethrow;
                 }
                 if (context.mounted) {
                   Provider.of<SearchProvider>(context, listen: false).query ==

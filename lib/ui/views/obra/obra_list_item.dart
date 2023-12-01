@@ -34,104 +34,6 @@ class _ListItem extends StatelessWidget {
   }
 }
 
-class _IsObra extends StatelessWidget {
-  final Obra item;
-  const _IsObra({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(
-        item.nombre,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      subtitle: item.autores != null
-          ? Text(
-              item.autores!,
-              style: Theme.of(context).textTheme.displaySmall,
-            )
-          : null,
-      trailing: MyElevatedButton.prestar(onPressed: () async {
-        await showModalBottomSheet(
-            elevation: 1,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) {
-              return ModalPrestar(idObra: item.id);
-            });
-      }),
-      children: [
-        if (item.empresaResponsable != null) ...[
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding / 2),
-            child: Text(
-              item.empresaResponsable!,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontSize: 12),
-            ),
-          ),
-        ],
-        if (item.sinopsis != null) ...[
-          Text(
-            'Sinopsis:',
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding / 2),
-            child: Text(
-              item.sinopsis!,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-          ),
-        ],
-        Text(
-          'Area:',
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(defaultPadding / 2),
-          child: Text(
-            item.area.name,
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _IsPrestamo extends StatelessWidget {
-  final Prestamo item;
-  const _IsPrestamo({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(
-        item.existencia.obra.nombre,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      subtitle: Text(
-        item.persona.nombre,
-        style: Theme.of(context).textTheme.displaySmall,
-      ),
-      trailing: (item.activo) ? const Text('activo') : const Text('inactivo'),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(defaultPadding / 2),
-          child: Text(
-            item.existencia.id,
-            style:
-                Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 Widget _buildTitle(final dynamic item, final BuildContext context) {
   final style = Theme.of(context).textTheme.bodyMedium;
   if (item is Obra) {
@@ -167,7 +69,7 @@ Widget? _buildTrailing(final dynamic item, final BuildContext context) {
             isScrollControlled: true,
             context: context,
             builder: (context) {
-              return ModalPrestar(idObra: item.id);
+              return ModalPrestar(obra: item);
             });
       });
     } else if (!item.activo) {
@@ -205,7 +107,25 @@ List<Widget> _buildTileContent(final dynamic item, final BuildContext context) {
         _subtitleText(item.empresaResponsable!, context, icon: Icons.home_work),
     ];
   } else if (item is Prestamo) {
-    return [];
+    return [
+      if (item.existencia.obra.sinopsis != null) ...{
+        _subtitleText('Sinopsis', context, icon: Icons.info),
+        _contentText(item.existencia.obra.sinopsis!, context),
+      },
+      if (item.existencia.obra.autores != null)
+        _subtitleText(item.existencia.obra.autores!, context,
+            icon: Icons.group),
+      if (item.existencia.obra.empresaResponsable != null)
+        _subtitleText(item.existencia.obra.empresaResponsable!, context,
+            icon: Icons.home_work),
+      if (item.fechaHoraDevolucion != null) ...{
+        _subtitleText('Fecha de devolucion', context, icon: Icons.schedule),
+        _contentText(item.fechaHoraDevolucion!.toIso8601String(), context),
+      } else ...{
+        _subtitleText('Devolucion no efectuada.', context, icon: Icons.warning),
+        _contentText('Presione el boton Devolver para efectuar.', context),
+      }
+    ];
   } else {
     return [];
   }
@@ -224,7 +144,7 @@ Widget _subtitleText(final String text, final BuildContext context,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
-                      ?.copyWith(fontSize: 12))
+                      ?.copyWith(fontSize: 12, fontWeight: FontWeight.w500))
             ],
           )
         : Text(

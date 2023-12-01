@@ -14,17 +14,24 @@ class Flurorouter {
   static String obrasPrestadasRoute  = '/prestados';
   static String obrasDevueltasRoute      = '/devueltos';
 
+  // Entradas
+  static String entradasRoute = '/entradas';
+
 
   static void configureRoutes() {
     // Auth Routes
-    router.define( rootRoute, handler: ObraHandler.disponibles, transitionType: TransitionType.none );
+    router.define( rootRoute, handler: BibliotecaHandler.disponibles, transitionType: TransitionType.none );
     // router.define( loginRoute, handler: AdminHandlers.login, transitionType: TransitionType.none );
     // router.define( registerRoute, handler: AdminHandlers.register, transitionType: TransitionType.none );
 
-    // Dashboard
-    router.define( obrasDisponiblesRoute, handler: ObraHandler.disponibles, transitionType: TransitionType.none );
-    router.define( obrasPrestadasRoute, handler: ObraHandler.prestados, transitionType: TransitionType.none );
-    router.define( obrasDevueltasRoute, handler: ObraHandler.devueltos, transitionType: TransitionType.none );
+    // Obras
+    router.define( obrasDisponiblesRoute, handler: BibliotecaHandler.disponibles, transitionType: TransitionType.none );
+    router.define( obrasPrestadasRoute, handler: BibliotecaHandler.prestados, transitionType: TransitionType.none );
+    router.define( obrasDevueltasRoute, handler: BibliotecaHandler.devueltos, transitionType: TransitionType.none );
+
+    //Entradas 
+    router.define(entradasRoute, handler : BibliotecaHandler.entradas, transitionType: TransitionType.none);
+    
     // 404
     router.notFoundHandler = NoPageFoundHandlers.noPageFound;
 

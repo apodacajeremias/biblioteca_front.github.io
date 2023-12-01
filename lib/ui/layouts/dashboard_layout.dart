@@ -34,6 +34,7 @@ class DashboardLayout extends StatelessWidget {
                           onTap: () {
                             NavigationService.replaceTo(Flurorouter.rootRoute);
                           }),
+                      const Divider(),
                       ListTile(
                           title: Text('Disponibles', style: style),
                           leading: const Icon(Icons.book),
@@ -55,6 +56,15 @@ class DashboardLayout extends StatelessWidget {
                             NavigationService.replaceTo(
                                 Flurorouter.obrasPrestadasRoute);
                           }),
+                      const Divider(),
+                      ListTile(
+                        title: Text('Entradas', style: style),
+                        leading: const Icon(Icons.follow_the_signs),
+                        onTap: () {
+                          NavigationService.replaceTo(
+                              Flurorouter.entradasRoute);
+                        },
+                      )
                     ],
                   )),
                   body: child,
