@@ -1,3 +1,4 @@
+import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/utils/color_extension.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -53,32 +54,32 @@ class _FlujoEntradaChartState extends State<FlujoEntradaChart> {
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey,
+          tooltipBgColor: Colors.blueGrey.lighten(),
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: -10,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             String weekDay;
             switch (group.x) {
               case 0:
-                weekDay = 'Monday';
+                weekDay = 'Lunes';
                 break;
               case 1:
-                weekDay = 'Tuesday';
+                weekDay = 'Martes';
                 break;
               case 2:
-                weekDay = 'Wednesday';
+                weekDay = 'Miércoles';
                 break;
               case 3:
-                weekDay = 'Thursday';
+                weekDay = 'Jueves';
                 break;
               case 4:
-                weekDay = 'Friday';
+                weekDay = 'Viernes';
                 break;
               case 5:
-                weekDay = 'Saturday';
+                weekDay = 'Sábado';
                 break;
               case 6:
-                weekDay = 'Sunday';
+                weekDay = 'Domingo';
                 break;
               default:
                 throw Error();
@@ -92,8 +93,8 @@ class _FlujoEntradaChartState extends State<FlujoEntradaChart> {
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: (rod.toY - 1).toString(),
-                  style: TextStyle(
+                  text: (rod.toY).toString(),
+                  style: const TextStyle(
                     color: Colors.yellow,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -116,12 +117,13 @@ class _FlujoEntradaChartState extends State<FlujoEntradaChart> {
           sideTitles: SideTitles(
             showTitles: true,
             getTitlesWidget: getTitles,
-            reservedSize: 38,
+            reservedSize: defaultPadding * 2,
           ),
         ),
         leftTitles: const AxisTitles(
           sideTitles: SideTitles(
             showTitles: false,
+            reservedSize: defaultPadding * 2,
           ),
         ),
       ),
@@ -154,7 +156,7 @@ class _FlujoEntradaChartState extends State<FlujoEntradaChart> {
               : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
-            toY: 20,
+            toY: 25, //TODO: mayor valor + 1
             color: Colors.white.darken().withOpacity(0.3),
           ),
         ),
@@ -164,41 +166,37 @@ class _FlujoEntradaChartState extends State<FlujoEntradaChart> {
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
+    final style = Theme.of(context).textTheme.displaySmall;
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = const Text('M', style: style);
+        text = Text('L', style: style);
         break;
       case 1:
-        text = const Text('T', style: style);
+        text = Text('M', style: style);
         break;
       case 2:
-        text = const Text('W', style: style);
+        text = Text('X', style: style);
         break;
       case 3:
-        text = const Text('T', style: style);
+        text = Text('J', style: style);
         break;
       case 4:
-        text = const Text('F', style: style);
+        text = Text('V', style: style);
         break;
       case 5:
-        text = const Text('S', style: style);
+        text = Text('S', style: style);
         break;
       case 6:
-        text = const Text('S', style: style);
+        text = Text('D', style: style);
         break;
       default:
-        text = const Text('', style: style);
+        text = Text('', style: style);
         break;
     }
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 16,
+      space: defaultPadding,
       child: text,
     );
   }

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 extension ColorExtension on Color {
   /// Convert the color to a darken color based on the [percent]
   Color darken([int percent = 40]) {
