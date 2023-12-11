@@ -1,4 +1,5 @@
 import 'package:biblioteca_front/api/biblioteca_api.dart';
+import 'package:biblioteca_front/app_colors.dart';
 import 'package:biblioteca_front/routers/router.dart';
 import 'package:biblioteca_front/services/navigation_service.dart';
 import 'package:biblioteca_front/services/notifications_service.dart';
@@ -61,8 +62,8 @@ class MyDashboard extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           // seedColor: const Color(0xFFFFFDF1),
           // primary: const Color(0xFFB0C4DE),
-          seedColor: Colors.yellow,
-          primary: Colors.blue,
+          seedColor: AppColors.primary,
+          primary: AppColors.primary,
           // ···
           brightness: Brightness.light,
         ),

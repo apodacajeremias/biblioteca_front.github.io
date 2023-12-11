@@ -1,3 +1,4 @@
+import 'package:biblioteca_front/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyElevatedButton extends StatelessWidget {
@@ -21,24 +22,30 @@ class MyElevatedButton extends StatelessWidget {
 
   factory MyElevatedButton.mostrarTodo({required Function onPressed}) =>
       MyElevatedButton(
-          text: 'Mostrar todo', onPressed: onPressed, color: Colors.yellow);
+          text: 'Mostrar todo',
+          onPressed: onPressed,
+          color: AppColors.contentColorYellow);
 
   factory MyElevatedButton.reintentar({required Function onPressed}) =>
       MyElevatedButton(
           text: 'Reintentar',
           icon: Icons.refresh,
           onPressed: onPressed,
-          color: Colors.yellow);
+          color: AppColors.contentColorYellow);
 
   ///
 
   factory MyElevatedButton.confirmar({required Function onPressed}) =>
       MyElevatedButton(
-          text: 'Si, confirmar', onPressed: onPressed, color: Colors.green);
+          text: 'Si, confirmar',
+          onPressed: onPressed,
+          color: AppColors.contentColorGreen);
 
   factory MyElevatedButton.cancelar({required Function onPressed}) =>
       MyElevatedButton(
-          text: 'No, cancelar', onPressed: onPressed, color: Colors.red);
+          text: 'No, cancelar',
+          onPressed: onPressed,
+          color: AppColors.contentColorRed);
 
   ///
 
@@ -47,7 +54,9 @@ class MyElevatedButton extends StatelessWidget {
 
   factory MyElevatedButton.salir({required Function onPressed}) =>
       MyElevatedButton(
-          text: 'Marcar salida', onPressed: onPressed, color: Colors.red);
+          text: 'Marcar salida',
+          onPressed: onPressed,
+          color: AppColors.contentColorRed);
 
   const MyElevatedButton(
       {super.key, this.text, this.icon, this.color, required this.onPressed});

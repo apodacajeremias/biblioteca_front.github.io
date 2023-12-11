@@ -1,3 +1,4 @@
+import 'package:biblioteca_front/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyOutlinedButton extends StatelessWidget {
@@ -14,24 +15,48 @@ class MyOutlinedButton extends StatelessWidget {
       MyOutlinedButton(
           text: 'Devolver', icon: Icons.task, onPressed: onPressed);
 
+  factory MyOutlinedButton.enviar({required Function onPressed}) =>
+      MyOutlinedButton(text: 'Enviar', icon: Icons.send, onPressed: onPressed);
+
+  ///
+
   factory MyOutlinedButton.mostrarTodo({required Function onPressed}) =>
       MyOutlinedButton(
-          text: 'Mostrar todo', onPressed: onPressed, color: Colors.yellow);
+          text: 'Mostrar todo',
+          onPressed: onPressed,
+          color: AppColors.contentColorYellow);
 
   factory MyOutlinedButton.reintentar({required Function onPressed}) =>
       MyOutlinedButton(
           text: 'Reintentar',
           icon: Icons.refresh,
           onPressed: onPressed,
-          color: Colors.yellow);
+          color: AppColors.contentColorYellow);
+
+  ///
 
   factory MyOutlinedButton.confirmar({required Function onPressed}) =>
       MyOutlinedButton(
-          text: 'Si, confirmar', onPressed: onPressed, color: Colors.green);
+          text: 'Si, confirmar',
+          onPressed: onPressed,
+          color: AppColors.contentColorGreen);
 
   factory MyOutlinedButton.cancelar({required Function onPressed}) =>
       MyOutlinedButton(
-          text: 'No, cancelar', onPressed: onPressed, color: Colors.red);
+          text: 'No, cancelar',
+          onPressed: onPressed,
+          color: AppColors.contentColorRed);
+
+  ///
+
+  factory MyOutlinedButton.entrar({required Function onPressed}) =>
+      MyOutlinedButton(text: 'Marcar entrada', onPressed: onPressed);
+
+  factory MyOutlinedButton.salir({required Function onPressed}) =>
+      MyOutlinedButton(
+          text: 'Marcar salida',
+          onPressed: onPressed,
+          color: AppColors.contentColorRed);
 
   const MyOutlinedButton(
       {super.key, this.text, this.icon, this.color, required this.onPressed});
@@ -39,7 +64,7 @@ class MyOutlinedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (icon != null) {
-      return OutlinedButton.icon(
+      return ElevatedButton.icon(
           style: color != null
               ? ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(color!))
@@ -50,7 +75,7 @@ class MyOutlinedButton extends StatelessWidget {
           icon: Icon(icon),
           label: buildMouseRegionForText());
     }
-    return OutlinedButton(
+    return ElevatedButton(
         style: color != null
             ? ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(color!))
