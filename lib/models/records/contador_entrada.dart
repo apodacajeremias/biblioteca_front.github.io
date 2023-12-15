@@ -13,7 +13,7 @@ String contadorEntradaToJson(ContadorEntrada data) =>
 class ContadorEntrada {
   int diaNumero;
   String diaNombre;
-  int cantidad;
+  double cantidad;
 
   ContadorEntrada({
     required this.diaNumero,

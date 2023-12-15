@@ -1,16 +1,10 @@
 import 'package:biblioteca_front/app_colors.dart';
-import 'package:biblioteca_front/constants.dart';
-import 'package:biblioteca_front/providers/entrada_provider.dart';
 import 'package:biblioteca_front/utils/color_extension.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../models/records/contador_entrada.dart';
 
 class _BarChart extends StatelessWidget {
-  final List<ContadorEntrada> entradas;
-  const _BarChart(this.entradas);
+  const _BarChart();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +16,7 @@ class _BarChart extends StatelessWidget {
         barGroups: barGroups,
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 100,
+        maxY: 20,
       ),
     );
   }
@@ -32,7 +26,7 @@ class _BarChart extends StatelessWidget {
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: defaultPadding / 2,
+          tooltipMargin: 8,
           getTooltipItem: (
             BarChartGroupData group,
             int groupIndex,
@@ -58,26 +52,26 @@ class _BarChart extends StatelessWidget {
     );
     String text;
     switch (value.toInt()) {
+      case 0:
+        text = 'Mn';
+        break;
       case 1:
-        text = 'Lu';
+        text = 'Te';
         break;
       case 2:
-        text = 'Ma';
+        text = 'Wd';
         break;
       case 3:
-        text = 'Mi';
+        text = 'Tu';
         break;
       case 4:
-        text = 'Ju';
+        text = 'Fr';
         break;
       case 5:
-        text = 'Vi';
+        text = 'St';
         break;
       case 6:
-        text = 'Sa';
-        break;
-      case 7:
-        text = 'Do';
+        text = 'Sn';
         break;
       default:
         text = '';
@@ -123,18 +117,78 @@ class _BarChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => entradas
-      .map((e) => BarChartGroupData(
-            x: e.diaNumero,
-            barRods: [
-              BarChartRodData(
-                toY: e.cantidad,
-                gradient: _barsGradient,
-              )
-            ],
-            showingTooltipIndicators: [0],
-          ))
-      .toList();
+  List<BarChartGroupData> get barGroups => [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 8,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 1,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 2,
+          barRods: [
+            BarChartRodData(
+              toY: 14,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 3,
+          barRods: [
+            BarChartRodData(
+              toY: 15,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 4,
+          barRods: [
+            BarChartRodData(
+              toY: 13,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 5,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 6,
+          barRods: [
+            BarChartRodData(
+              toY: 16,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+      ];
 }
 
 class ContadorEntradaChart extends StatefulWidget {
@@ -146,16 +200,10 @@ class ContadorEntradaChart extends StatefulWidget {
 
 class ContadorEntradaChartState extends State<ContadorEntradaChart> {
   @override
-  void initState() {
-    Provider.of<EntradaProvider>(context, listen: false).contar();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AspectRatio(
+    return const AspectRatio(
       aspectRatio: 1.6,
-      child: _BarChart(Provider.of<EntradaProvider>(context).contadorEntradas),
+      child: _BarChart(),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:biblioteca_front/ui/charts/contador_entrada_chart.dart';
+import 'package:biblioteca_front/ui/charts/contador_entrada_chart copy.dart'
+    as copy;
 import 'package:biblioteca_front/ui/charts/flujo_entrada.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +11,16 @@ class InicioView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final size = MediaQuery.of(context).size;
+    return ListView(
       children: [
         Text('Inicio', style: Theme.of(context).textTheme.titleLarge),
-        Row(
+        Wrap(
           children: [
-            Expanded(child: ContadorEntradaChart()),
-            Expanded(child: LineChartSample1())
+            Container(width: size.width / 2, child: ContadorEntradaChart()),
+            Container(
+                width: size.width / 2, child: copy.ContadorEntradaChart()),
+            LineChartSample1()
           ],
         )
       ],
