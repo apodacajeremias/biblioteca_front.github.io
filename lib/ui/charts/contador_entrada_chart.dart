@@ -1,6 +1,7 @@
 import 'package:biblioteca_front/app_colors.dart';
 import 'package:biblioteca_front/constants.dart';
 import 'package:biblioteca_front/providers/entrada_provider.dart';
+import 'package:biblioteca_front/responsive.dart';
 import 'package:biblioteca_front/utils/color_extension.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,16 @@ class _BarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double max = 1;
+    if (entradas.isNotEmpty) {
+      max = entradas
+          .map((e) => e.cantidad)
+          .reduce((curr, next) => curr > next ? curr : next);
+    } else {
+      return Center(
+          child: Text('No hay datos',
+              style: Theme.of(context).textTheme.bodyMedium));
+    }
     return BarChart(
       BarChartData(
         barTouchData: barTouchData,
@@ -22,7 +33,7 @@ class _BarChart extends StatelessWidget {
         barGroups: barGroups,
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 100,
+        maxY: max + 10,
       ),
     );
   }
@@ -153,9 +164,32 @@ class ContadorEntradaChartState extends State<ContadorEntradaChart> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.6,
-      child: _BarChart(Provider.of<EntradaProvider>(context).contadorEntradas),
+    final size = MediaQuery.of(context).size;
+    final isDesktop = Responsive.isDesktop(context);
+    return SizedBox(
+      width: isDesktop ? size.width / 2 : size.width,
+      child: Card(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            Text('Cantidad de entradas última semana',
+                style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            AspectRatio(
+              aspectRatio: 1.6,
+              child: Padding(
+                padding: const EdgeInsets.all(defaultPadding),
+                child: _BarChart(
+                    Provider.of<EntradaProvider>(context).contadorEntradas),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

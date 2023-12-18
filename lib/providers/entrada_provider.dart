@@ -6,6 +6,7 @@ import '../models/entrada.dart';
 
 class EntradaProvider extends ChangeNotifier {
   List<ContadorEntrada> contadorEntradas = [];
+  List<ContadorEntrada> promedioEntradas = [];
   Future buscar({int page = 0, String query = ''}) async {
     var url = '/entradas?page=$page&query=$query';
     final response = await BibliotecaAPI.httpGet(url);
@@ -31,6 +32,15 @@ class EntradaProvider extends ChangeNotifier {
     List<ContadorEntrada> list =
         List.from(response.map((x) => ContadorEntrada.fromJson(x)));
     contadorEntradas = list;
+    notifyListeners();
+  }
+
+  Future<void> promedio({DateTime? from, DateTime? to}) async {
+    String url = '/entradas/promedio';
+    final response = await BibliotecaAPI.httpGet(url);
+    List<ContadorEntrada> list =
+        List.from(response.map((x) => ContadorEntrada.fromJson(x)));
+    promedioEntradas = list;
     notifyListeners();
   }
 }

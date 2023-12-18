@@ -1,13 +1,30 @@
 import 'package:biblioteca_front/app_colors.dart';
+import 'package:biblioteca_front/constants.dart';
+import 'package:biblioteca_front/providers/entrada_provider.dart';
 import 'package:biblioteca_front/utils/color_extension.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/records/contador_entrada.dart';
+import '../../responsive.dart';
 
 class _BarChart extends StatelessWidget {
-  const _BarChart();
+  final List<ContadorEntrada> entradas;
+  const _BarChart(this.entradas);
 
   @override
   Widget build(BuildContext context) {
+    double max = 1;
+    if (entradas.isNotEmpty) {
+      max = entradas
+          .map((e) => e.cantidad)
+          .reduce((curr, next) => curr > next ? curr : next);
+    } else {
+      return Center(
+          child: Text('No hay datos',
+              style: Theme.of(context).textTheme.bodyMedium));
+    }
     return BarChart(
       BarChartData(
         barTouchData: barTouchData,
@@ -16,7 +33,7 @@ class _BarChart extends StatelessWidget {
         barGroups: barGroups,
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
+        maxY: max + 10,
       ),
     );
   }
@@ -26,7 +43,7 @@ class _BarChart extends StatelessWidget {
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
+          tooltipMargin: defaultPadding / 2,
           getTooltipItem: (
             BarChartGroupData group,
             int groupIndex,
@@ -52,26 +69,26 @@ class _BarChart extends StatelessWidget {
     );
     String text;
     switch (value.toInt()) {
-      case 0:
-        text = 'Mn';
-        break;
       case 1:
-        text = 'Te';
+        text = 'Lu';
         break;
       case 2:
-        text = 'Wd';
+        text = 'Ma';
         break;
       case 3:
-        text = 'Tu';
+        text = 'Mi';
         break;
       case 4:
-        text = 'Fr';
+        text = 'Ju';
         break;
       case 5:
-        text = 'St';
+        text = 'Vi';
         break;
       case 6:
-        text = 'Sn';
+        text = 'Sa';
+        break;
+      case 7:
+        text = 'Do';
         break;
       default:
         text = '';
@@ -117,93 +134,62 @@ class _BarChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 16,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
+  List<BarChartGroupData> get barGroups => entradas
+      .map((e) => BarChartGroupData(
+            x: e.diaNumero,
+            barRods: [
+              BarChartRodData(
+                toY: e.cantidad,
+                gradient: _barsGradient,
+              )
+            ],
+            showingTooltipIndicators: [0],
+          ))
+      .toList();
 }
 
-class ContadorEntradaChart extends StatefulWidget {
-  const ContadorEntradaChart({super.key});
+class PromedioEntradaChart extends StatefulWidget {
+  const PromedioEntradaChart({super.key});
 
   @override
-  State<StatefulWidget> createState() => ContadorEntradaChartState();
+  State<StatefulWidget> createState() => PromedioEntradaChartState();
 }
 
-class ContadorEntradaChartState extends State<ContadorEntradaChart> {
+class PromedioEntradaChartState extends State<PromedioEntradaChart> {
+  @override
+  void initState() {
+    Provider.of<EntradaProvider>(context, listen: false).promedio();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const AspectRatio(
-      aspectRatio: 1.6,
-      child: _BarChart(),
+    final size = MediaQuery.of(context).size;
+    final isDesktop = Responsive.isDesktop(context);
+    return SizedBox(
+      width: isDesktop ? size.width / 2 : size.width,
+      child: Card(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            Text('Promedio de permanencia en minutos última semana',
+                style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            AspectRatio(
+              aspectRatio: 1.6,
+              child: Padding(
+                padding: const EdgeInsets.all(defaultPadding),
+                child: _BarChart(
+                    Provider.of<EntradaProvider>(context).promedioEntradas),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

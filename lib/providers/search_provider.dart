@@ -11,7 +11,6 @@ class SearchProvider extends ChangeNotifier {
   }
 
   refresh() {
-    debugPrint('refresh ui');
     notifyListeners();
   }
 }
